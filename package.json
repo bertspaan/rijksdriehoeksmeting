@@ -10,9 +10,7 @@
   },
   "dependencies": {
     "@turf/area": "^6.0.1",
-    "@turf/envelope": "^5.1.5",
     "axios": "^0.18.0",
-    "d3-geo-voronoi": "^1.1.2",
     "rbush": "^2.0.2",
     "reconnecting-websocket": "^4.1.10",
     "vue": "^2.5.22"

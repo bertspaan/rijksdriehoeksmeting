@@ -40,6 +40,9 @@ export default {
     IIIFImage,
     Join
   },
+  props: {
+    getImageUrl: Function
+  },
   data () {
     return {
       locations: undefined,
@@ -122,10 +125,6 @@ export default {
     })
   },
   mounted: function () {
-    // setTimeout(() => {
-    //   this.yourMethod()
-    // }, 1000)
-
     axios
       .get('locations.geojson')
       .then((response) => {

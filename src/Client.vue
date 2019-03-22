@@ -13,10 +13,6 @@
 <script>
 import axios from 'axios'
 import WebSocket from './components/mixins/WebSocket.js'
-// const geoVoronoi = require('d3-geo-voronoi')
-
-import area from '@turf/area'
-import envelope from '@turf/envelope'
 
 export default {
   name: 'client',
