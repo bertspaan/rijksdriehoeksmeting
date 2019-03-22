@@ -1,20 +1,26 @@
 <template>
   <div id="app">
-     <ul class="tags">
-      <li v-for="feature in selected" :key="feature.properties.picture">
-        <a target="_blank" :href="`http://universalviewer.io/uv.html?manifest=https://dlc.services/iiif-manifest/delft/rijksdriehoeksmeting/${feature.properties.photos[0].iiifId}`">
-          <img :src="`https://dlc.services/thumbs/7/1/${feature.properties.photos[0].iiifId}/full/,400/0/default.jpg`">
-        </a>
-
-        <!-- <img srcset="elva-fairy-320w.jpg 320w,
-             elva-fairy-480w.jpg 480w,
-             elva-fairy-800w.jpg 800w"
-     sizes="(max-width: 320px) 280px,
-            (max-width: 480px) 440px,
-            800px"
-     src="elva-fairy-800w.jpg" alt="Elva dressed as a fairy"> -->
-      </li>
-     </ul>
+    <template v-if="selected.length">
+      <ul class="clients">
+        <li v-for="(client, index) in selected" :key="client.clientId" class="client"
+          :style="{
+            borderColor: ['red', 'blue'][index],
+            width: `${Math.round(100 / selected.length )}%`
+          }">
+          <ol class="locations"
+            :style="{
+              gridTemplateColumns: `repeat(auto-fill, ${Math.round(100 / client.locations.length )}%)`
+            }">
+            <li class="location" v-for="feature in client.locations" :key="feature.properties.photos[0].iiifId">
+              <IIIFImage :iiifId="feature.properties.photos[0].iiifId" />
+            </li>
+          </ol>
+        </li>
+      </ul>
+    </template>
+     <template v-else>
+       <Join :locations="locations" />
+     </template>
   </div>
 </template>
 
@@ -24,11 +30,21 @@ import rbush from 'rbush'
 
 import WebSocket from './components/mixins/WebSocket.js'
 
+import IIIFImage from './components/IIIFImage.vue'
+import Join from './components/Join.vue'
+
 export default {
   name: 'display',
   mixins: [WebSocket],
+  components: {
+    IIIFImage,
+    Join
+  },
   data () {
     return {
+      locations: undefined,
+      tree: undefined,
+      timeout: undefined,
       selected: [],
       clientData: {},
       ttl: 10 * 1000
@@ -68,19 +84,30 @@ export default {
         data
       }
 
+      if (this.timeout) {
+        window.clearTimeout(this.timeout)
+      }
+
+      this.timeout = window.setTimeout(() => {
+        this.selected = []
+      }, this.ttl)
+
+
       this.update()
     },
     // https://dlc.services/thumbs/7/1/00225b52-2bf3-491b-a3bb-d679e4e4e684/full/57,100/0/default.jpg
     update: function () {
-      let selected = []
-
-      Object.entries(this.clientData)
-        .forEach((pair) => {
-          // const clientId = pair[0]
+      const selected = Object.entries(this.clientData)
+        .map((pair) => {
+          const clientId = pair[0]
           const data = pair[1]
 
           const locations = this.locationsForBounds(data.data.bounds)
-          selected = [...selected, ...locations]
+
+          return {
+            clientId,
+            locations
+          }
         })
       this.selected = selected
     }
@@ -141,12 +168,26 @@ html, body {
   color: #2c3e50;
 }
 
-.tags {
+.clients, .locations {
   list-style-type: none;
   margin: 0;
   padding: 0;
-
   display: flex;
   flex-wrap: wrap;
+}
+
+.client {
+  border-width: 10px;
+  border-style: solid;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: 100vh;
+}
+
+.locations {
+  display: grid;
+  grid-auto-flow: row;
+  width: 100%;
+  height: 100%;
 }
 </style>

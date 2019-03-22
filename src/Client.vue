@@ -13,7 +13,7 @@
 <script>
 import axios from 'axios'
 import WebSocket from './components/mixins/WebSocket.js'
-const geoVoronoi = require('d3-geo-voronoi')
+// const geoVoronoi = require('d3-geo-voronoi')
 
 import area from '@turf/area'
 import envelope from '@turf/envelope'
@@ -73,36 +73,36 @@ export default {
           this.locations = response.data
           return this.locations
         }).then((locations) => {
-          const voronoi = geoVoronoi.geoVoronoi(locations)
-          const triangles = voronoi.triangles()
+          // const voronoi = geoVoronoi.geoVoronoi(locations)
+          // const triangles = voronoi.triangles()
 
-          const maxArea = 1000 * 1000 * 250
+          // const maxArea = 1000 * 1000 * 250
 
-          const smallTriangles = {
-            type: 'FeatureCollection',
-            features: triangles.features
-              .filter((triangle) => area(envelope(triangle)) < maxArea)
-          }
+          // const smallTriangles = {
+          //   type: 'FeatureCollection',
+          //   features: triangles.features
+          //     .filter((triangle) => area(envelope(triangle)) < maxArea)
+          // }
 
           map.addSource('points', {
             type: 'geojson',
             data: locations
           })
 
-          map.addSource('triangles', {
-            type: 'geojson',
-            data: smallTriangles
-          })
+          // map.addSource('triangles', {
+          //   type: 'geojson',
+          //   data: smallTriangles
+          // })
 
-          map.addLayer({
-            id: 'triangles',
-            type: 'line',
-            source: 'triangles',
-            'paint': {
-              'line-color': '#fff',
-              'line-opacity': 0.2
-            }
-          }, firstSymbolId)
+          // map.addLayer({
+          //   id: 'triangles',
+          //   type: 'line',
+          //   source: 'triangles',
+          //   'paint': {
+          //     'line-color': '#fff',
+          //     'line-opacity': 0.2
+          //   }
+          // }, firstSymbolId)
 
           map.addLayer({
             id: 'points',
