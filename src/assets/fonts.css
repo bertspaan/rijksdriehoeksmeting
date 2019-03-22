@@ -1,0 +1,85 @@
+@font-face {
+  font-family: NEXTBook;
+  src: url(fonts/NEXTBook-Regular.otf) format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: NEXTBook;
+  src: url(fonts/NEXTBook-Italic.otf) format('opentype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: NEXTBook;
+  src: url(fonts/NEXTBook-Light.otf) format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: NEXTBook;
+  src: url(fonts/NEXTBook-LightItalic.otf) format('opentype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: NEXTBook;
+  src: url(fonts/NEXTBook-Medium.otf) format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: NEXTBook;
+  src: url(fonts/NEXTBook-MediumItalic.otf) format('opentype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: NEXTBook;
+  src: url(fonts/NEXTBook-Thin.otf) format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  font-family: NEXTBook, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 24px;
+  background-color: rgb(26, 43, 60);
+}
+
+#app, a, a:visited {
+  color: #f3f3f3;
+}
+
+.dutch h1,
+.dutch h2,
+.dutch h3 {
+  font-weight: normal;
+}
+
+.dutch p {
+  font-weight: normal;
+}
+
+.english h1,
+.english h2,
+.english h3 {
+  font-weight: 300;
+}
+
+.english p {
+  font-weight: 300;
+}
