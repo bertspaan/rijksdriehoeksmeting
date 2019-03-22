@@ -126,7 +126,7 @@ export default {
   },
   mounted: function () {
     axios
-      .get('locations.geojson')
+      .get('../locations.geojson')
       .then((response) => {
         this.locations = response.data
         return this.locations
