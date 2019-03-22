@@ -4,10 +4,7 @@ export default {
   name: 'WebSocket',
   data() {
     return {
-      rws: new ReconnectingWebSocket('wss://rijksdriehoeks.glitch.me/ws')
-      // rws: new ReconnectingWebSocket('wss://bedecked-locket.glitch.me/ws')
-
-      // rws: new ReconnectingWebSocket('ws://localhost:3000/')
+      rws: new ReconnectingWebSocket('wss://rijksdriehoeksmeting-api.glitch.me/ws')
     }
   },
   props: {

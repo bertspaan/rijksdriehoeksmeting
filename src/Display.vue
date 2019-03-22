@@ -21,6 +21,14 @@
      <template v-else>
        <Join :locations="locations" />
      </template>
+
+    <div class="qrcode">
+      <img src="./assets/qrcode.svg" />
+      <p>
+        <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/
+        <br />tentoonstelling</a>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -154,6 +162,15 @@ export default {
 </script>
 
 <style>
+#app {
+  display: flex;
+  flex-direction: row;
+}
+
+.clients {
+  width: 100%;
+}
+
 .clients, .locations {
   list-style-type: none;
   margin: 0;
@@ -175,5 +192,20 @@ export default {
   grid-auto-flow: row;
   width: 100%;
   height: 100%;
+}
+
+.qrcode {
+  padding: 10px;
+  /* position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: white; */
+}
+
+.qrcode p {
+  font-size: 90%;
+  padding: 5px;
+  margin: 0;
+  line-height: 1.2em;
 }
 </style>

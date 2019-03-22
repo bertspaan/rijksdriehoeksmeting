@@ -47,21 +47,45 @@
   font-style: normal;
 }
 
-html, body {
+html {
+  font-size: 24px;
+}
+
+body {
   margin: 0;
   padding: 0;
+
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+html, body {
+  background-color: rgb(26, 43, 60);
 }
 
 #app {
   font-family: NEXTBook, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 24px;
-  background-color: rgb(26, 43, 60);
 }
 
 #app, a, a:visited {
   color: #f3f3f3;
+}
+
+h1 {
+  font-size: 4.0833333rem;
+  /* line-height: 4.875rem; */
+  margin-top: 1.625rem;
+  margin-bottom: 3.25rem;
+}
+
+h2 {
+  font-size: 2.5416667rem;
+  line-height: 3.25rem;
+  line-height: .8em;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .dutch h1,

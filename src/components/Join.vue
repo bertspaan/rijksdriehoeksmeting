@@ -6,19 +6,18 @@
     <hr class="vertical-line" />
     <div class="text">
       <div class="dutch">
-        <h2>Meetpunten</h2>
-        <p>Doe mee, ga naar <a href="https://bertspaan.nl/rijksdriehoeksmeting/#7.82/52.065/5.47">bertspaan.nl/rijksdriehoeksmeting</a>
-          en zoek je eigen rijksdriehoeksmeetpunt, het is écht leuk en mooi en goed!
+        <h2>Animatie van meetpunten</h2>
+        <p>
+          8274 foto's van meetpunten in Nederland. Ga naar <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a>
+          en zoek de rijksdriehoeksmeetpunten in je eigen woonplaats op de kaart.
         </p>
       </div>
       <div class="english">
-        <h2>Measuring points</h2>
-        <p><a href="https://bertspaan.nl/rijksdriehoeksmeting/#7.82/52.065/5.47">bertspaan.nl/rijksdriehoeksmeting</a>
-          en zoek je eigen rijksdriehoeksmeetpunt, het is écht leuk en mooi en goed!
+        <h2>Animation of measuring points</h2>
+        <p>
+          8274 photos or measuring points in the Netherlands. Visit <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a>
+          and find
         </p>
-      </div>
-      <div>
-        <img src="../assets/qrcode.svg" />
       </div>
     </div>
   </div>
@@ -80,7 +79,7 @@ export default {
 
 .vertical-line {
   background-color: white;
-  width: 8px;
+  width: 4px;
   margin: 0 1em;
   flex-shrink: 0;
 }
@@ -97,8 +96,6 @@ export default {
 .text {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: ; */
 }
 
 .dutch h2 {
