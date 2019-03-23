@@ -2,9 +2,8 @@
   <div id="app">
     <template v-if="selected.length">
       <ul class="clients">
-        <li v-for="(client, index) in selected" :key="client.clientId" class="client"
+        <li v-for="(client) in selected" :key="client.clientId" class="client"
           :style="{
-            borderColor: ['red', 'blue'][index],
             width: `${Math.round(100 / selected.length )}%`
           }">
           <ol class="locations"
@@ -21,14 +20,6 @@
      <template v-else>
        <Join :locations="locations" />
      </template>
-
-    <div class="qrcode">
-      <img src="./assets/qrcode.svg" />
-      <p>
-        <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/
-        <br />tentoonstelling</a>
-      </p>
-    </div>
   </div>
 </template>
 
@@ -162,10 +153,6 @@ export default {
 </script>
 
 <style>
-#app {
-  display: flex;
-  flex-direction: row;
-}
 
 .clients {
   width: 100%;
@@ -180,8 +167,7 @@ export default {
 }
 
 .client {
-  border-width: 10px;
-  border-style: solid;
+  padding: 10px;
   flex-shrink: 0;
   box-sizing: border-box;
   height: 100vh;

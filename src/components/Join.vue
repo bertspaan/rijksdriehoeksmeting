@@ -19,6 +19,13 @@
           and find
         </p>
       </div>
+      <div class="qrcode">
+        <img src="../assets/qrcode.svg" />
+        <p>
+          <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/
+          <br />tentoonstelling</a>
+        </p>
+      </div>
     </div>
   </div>
 </template>
