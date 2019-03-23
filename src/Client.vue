@@ -2,9 +2,7 @@
   <div id="app">
     <header>
       <div class="dutch">
-        <p>
         Beweeg de kaart
-        </p>
       </div>
       <div class="english">
         Move the map!
@@ -117,15 +115,7 @@ export default {
     map.on('load', () => {
       this.throttledSendBounds()
 
-      // const layers = map.getStyle().layers
-      // // Find the index of the first symbol layer in the map style
-      let firstSymbolId = 'waterway-label'
-      // for (var i = 0; i < layers.length; i++) {
-      //   if (layers[i].type === 'symbol') {
-      //     firstSymbolId = layers[i].id
-      //     break
-      //   }
-      // }
+      // let firstSymbolId = 'waterway-label'
 
       axios
         // TODO: make locations-small.geojson
