@@ -1,7 +1,7 @@
 <template>
   <div class="panes">
     <div class="location">
-      <IIIFImage v-if="iiifId" :iiifId="iiifId" />
+      <IIIFImage v-if="photo" :iiifId="photo.iiifId" :dimensions="photo.dimensions" />
     </div>
     <hr class="vertical-line" />
     <div class="text">
@@ -20,7 +20,9 @@
         </p>
       </div>
       <div class="qrcode">
-        <img src="../assets/qrcode.svg" />
+        <div class="image-container">
+          <img src="../assets/qrcode.svg" />
+        </div>
         <p>
           <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/
           <br />tentoonstelling</a>
@@ -43,8 +45,13 @@ export default {
   data () {
     return {
       interval: undefined,
-      iiifId: undefined,
+      photo: undefined,
       seconds: 5 * 1000
+    }
+  },
+  watch: {
+    locations: function () {
+      this.update()
     }
   },
   methods: {
@@ -52,12 +59,11 @@ export default {
       if (this.$props.locations) {
         const features = this.$props.locations.features
         const index = Math.round(Math.random() * features.length)
-        this.iiifId = features[index].properties.photos[0].iiifId
+        this.photo = features[index].properties.photos[0]
       }
     }
   },
   mounted: function () {
-    this.update()
     this.interval = window.setInterval(this.update, this.seconds)
   },
   destroyed: function () {
@@ -69,7 +75,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import '../assets/fonts.css';
 
 .panes {
@@ -107,6 +113,27 @@ export default {
 
 .dutch h2 {
   margin-top: 0;
+}
+
+.qrcode {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+  width: 200px;
+  padding: 10px;
+}
+
+.qrcode img {
+  width: 100%;
+  display: block;
+}
+
+.qrcode p {
+  font-size: 80%;
+  padding: 5px;
+  margin: 0;
+  line-height: 1.2em;
 }
 
 </style>

@@ -10,12 +10,12 @@
     </header>
     <main>
       <div id="map" />
-    </main>
-    <footer v-if="!active">
+      <footer v-if="!active">
       <div>
         Nee, het is niet goed! Wacht even tot de ander klaar is
       </div>
     </footer>
+    </main>
   </div>
 </template>
 
@@ -29,21 +29,45 @@ export default {
   mixins: [WebSocket],
   data () {
     return {
-      active: true
+      active: true,
+      highlightedIDs: []
     }
   },
   methods: {
-    throttledSendBounds: throttle(function () {
-      this.sendBounds()
-    }, 200),
-    sendBounds: function () {
+    throttledSendData: throttle(function () {
+      this.sendData()
+    }, 500),
+    sendData: function () {
       if (this.map) {
         const bounds = this.map.getBounds().toArray()
-        const zoom = this.map.getZoom()
-        this.wsSend('client', {
-          bounds,
-          zoom
+
+        const features = this.map.queryRenderedFeatures({
+          layers: ['points']
         })
+
+        this.highlightedIDs.forEach((id) => {
+          this.map.setFeatureState({
+            id,
+            source: 'points'
+          }, {
+            highlight: false
+          })
+        })
+
+        this.highlightedIDs = features.slice(0, 8).map((feature) => feature.id)
+
+
+
+        this.highlightedIDs.forEach((id) => {
+          this.map.setFeatureState({
+            id,
+            source: 'points'
+          }, {
+            highlight: true
+          })
+        })
+
+        this.wsSend('client', this.highlightedIDs)
       }
     }
   },
@@ -113,13 +137,11 @@ export default {
 
 
     map.on('load', () => {
-      this.throttledSendBounds()
-
       // let firstSymbolId = 'waterway-label'
 
       axios
         // TODO: make locations-small.geojson
-        .get('locations.geojson')
+        .get('locations.client.geojson')
         .then((response) => {
           this.locations = response.data
           return this.locations
@@ -165,16 +187,29 @@ export default {
                 8, 3,
                 16, 10,
               ],
-              'circle-color': 'rgb(240, 75, 52)'
+              // 'circle-color': 'rgb(240, 75, 52)',
+              'circle-opacity': ['case',
+                ['boolean', ['feature-state', 'highlight'], false],
+                1,
+                0.2
+              ],
+
+              'circle-color': ['case',
+                ['boolean', ['feature-state', 'highlight'], false],
+                'green',
+                'red'
+              ]
             }
           })
           // }, firstSymbolId)
+
+          this.throttledSendData()
 
         })
     })
 
     map.on('move', () => {
-      this.throttledSendBounds()
+      this.throttledSendData()
     })
 
     this.map = map
@@ -185,14 +220,7 @@ export default {
 <style>
 @import './assets/fonts.css';
 
-body {
-  margin: 0;
-  padding: 0;
-}
-
 #app {
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
 
@@ -201,7 +229,7 @@ body {
 }
 
 header {
-  height: 200px;
+
 }
 
 main {

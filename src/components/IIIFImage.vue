@@ -1,15 +1,6 @@
 <template>
-  <a target="_blank" :href="`http://universalviewer.io/uv.html?manifest=https://dlc.services/iiif-manifest/delft/rijksdriehoeksmeting/${iiifId}`">
-    <!-- <img :src="`https://dlc.services/thumbs/7/1/${iiifId}/full/,400/0/default.jpg`"> -->
-
-    <img :srcset="`https://dlc.services/iiif-img/7/1/${iiifId}/full/250,/0/default.jpg 250w,
-          https://dlc.services/iiif-img/7/1/${iiifId}/full/500,/0/default.jpg 500w,
-          https://dlc.services/iiif-img/7/1/${iiifId}/full/1000,/0/default.jpg 1000w`"
-     sizes="(max-width: 250px) 250px,
-            (max-width: 500px) 500px,
-            1000px"
-     :src="`https://dlc.services/iiif-img/7/1/${iiifId}/full/1000,/0/default.jpg`">
-  </a>
+  <img :srcset="this.imgSrcset" :sizes="this.imgSizes"
+    :src="this.imgSrc" />
 </template>
 
 <script>
@@ -19,7 +10,48 @@
 
 export default {
   name: 'iiifImage',
-  props: ['iiifId']
+  props: {
+    'iiifId': String,
+    'dimensions': Array
+  },
+  data () {
+    return {
+      // baseUrl: 'https://dlc.services/iiif-img/7/1',
+      baseUrl: 'https://dlc.services/thumbs/7/1',
+      thumbnailSizes: [
+        100,
+        200,
+        400,
+        1024
+      ]
+    }
+  },
+  methods: {
+    sizeStr: function (size) {
+      return this.orientation === 'landscape' ? `${size},` : `,${size}`
+    },
+    url: function (size) {
+      return `${this.baseUrl}/${this.iiifId}/full/${this.sizeStr(size)}/0/default.jpg`
+    }
+  },
+  computed: {
+    orientation: function () {
+      return this.dimensions[0] > this.dimensions[1] ? 'landscape' : 'portrait'
+    },
+    imgSrcset: function () {
+      return this.thumbnailSizes.map((size) => `${this.url(size)} ${size}w`)
+        .join(', ')
+    },
+    imgSizes: function () {
+      const n = this.thumbnailSizes.length
+      return this.thumbnailSizes
+        .map((size, index) => `${index < n - 1 ? `(max-width: ${size})` : ''} ${size}px`)
+        .join(', ')
+    },
+    imgSrc: function () {
+      return this.url(this.thumbnailSizes[this.thumbnailSizes.length - 1])
+    }
+  }
 }
 </script>
 
@@ -27,5 +59,6 @@ export default {
 img {
   max-width: 100%;
   max-height: 100%;
+  object-fit: contain;
 }
 </style>

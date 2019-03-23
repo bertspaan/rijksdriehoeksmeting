@@ -4,14 +4,20 @@
       <ul class="clients">
         <li v-for="(client) in selected" :key="client.clientId" class="client"
           :style="{
-            width: `${Math.round(100 / selected.length )}%`
+            width: `${Math.floor(100 / selected.length )}%`
           }">
           <ol class="locations"
             :style="{
               gridTemplateColumns: `repeat(auto-fill, ${Math.round(100 / client.locations.length )}%)`
             }">
-            <li class="location" v-for="feature in client.locations" :key="feature.properties.photos[0].iiifId">
-              <IIIFImage :iiifId="feature.properties.photos[0].iiifId" />
+            <li class="location" v-for="feature in client.locations" :key="feature.properties.photos[0].iiifId"
+              :style="{
+                width: `${Math.floor(100 / client.locations.length )}%`
+                //width: `${Math.floor(100 / client.locations.length ) * (client.locations.length > 4 ? 2 : 1)}%`,
+                //height: client.locations.length > 4 ? '50%' : '100%'
+              }">
+              <IIIFImage :iiifId="feature.properties.photos[0].iiifId"
+                :dimensions="feature.properties.photos[0].dimensions" />
             </li>
           </ol>
         </li>
@@ -25,7 +31,6 @@
 
 <script>
 import axios from 'axios'
-import rbush from 'rbush'
 
 import WebSocket from './components/mixins/WebSocket.js'
 
@@ -45,32 +50,31 @@ export default {
   data () {
     return {
       locations: undefined,
-      tree: undefined,
       timeout: undefined,
       selected: [],
       clientData: {},
-      ttl: 10 * 1000
+      ttl: 10 * 1000       * 50
     }
   },
   methods: {
-    locationsForBounds: function (bounds, limit=10) {
-      if (this.locations && this.tree) {
-        const results = this.tree.search({
-          minX: bounds[0][0],
-          minY: bounds[0][1],
-          maxX: bounds[1][0],
-          maxY: bounds[1][1]
-        })
+    // locationsForBounds: function (bounds, limit=10) {
+    //   if (this.locations && this.tree) {
+    //     const results = this.tree.search({
+    //       minX: bounds[0][0],
+    //       minY: bounds[0][1],
+    //       maxX: bounds[1][0],
+    //       maxY: bounds[1][1]
+    //     })
 
-        const features = results.map((result) =>
-          this.locations.features[result.index]
-        )
+    //     const features = results.map((result) =>
+    //       this.locations.features[result.index]
+    //     )
 
-        return features.slice(0, limit)
-      }
+    //     return features.slice(0, limit)
+    //   }
 
-      return []
-    },
+    //   return []
+    // },
     setClientData: function (clientId, data) {
       const timestamp = + new Date()
 
@@ -104,7 +108,11 @@ export default {
           const clientId = pair[0]
           const data = pair[1]
 
-          const locations = this.locationsForBounds(data.data.bounds)
+          const ids = data.data
+
+          const locations = this.locations.features.filter((location) => {
+            return ids.includes(location.id)
+          })
 
           return {
             clientId,
@@ -125,28 +133,10 @@ export default {
   },
   mounted: function () {
     axios
-      .get('../locations.geojson')
+      .get('../locations.display.geojson')
       .then((response) => {
         this.locations = response.data
         return this.locations
-      }).then((locations) => {
-        const items = locations.features.map((feature, index) => {
-          const x = feature.geometry.coordinates[0]
-          const y = feature.geometry.coordinates[1]
-
-          const item = {
-            minX: x,
-            minY: y,
-            maxX: x,
-            maxY: y,
-            index: index
-          }
-          return item
-        })
-
-        const tree = rbush(items.length)
-        tree.load(items)
-        this.tree = tree
       })
   }
 }
@@ -167,31 +157,30 @@ export default {
 }
 
 .client {
-  padding: 10px;
+  padding: 5px;
   flex-shrink: 0;
   box-sizing: border-box;
   height: 100vh;
 }
 
 .locations {
-  display: grid;
-  grid-auto-flow: row;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
 }
 
-.qrcode {
-  padding: 10px;
-  /* position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: white; */
-}
-
-.qrcode p {
-  font-size: 90%;
+.location {
+  height: 100%;
+  box-sizing: border-box;
   padding: 5px;
-  margin: 0;
-  line-height: 1.2em;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
 }
 </style>
