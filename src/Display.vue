@@ -53,7 +53,7 @@ export default {
       timeout: undefined,
       selected: [],
       clientData: {},
-      ttl: 10 * 1000       * 50
+      ttl: 10 * 1000
     }
   },
   methods: {

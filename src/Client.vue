@@ -39,7 +39,7 @@ export default {
     }, 500),
     sendData: function () {
       if (this.map) {
-        const bounds = this.map.getBounds().toArray()
+        // const bounds = this.map.getBounds().toArray()
 
         const features = this.map.queryRenderedFeatures({
           layers: ['points']
@@ -55,8 +55,6 @@ export default {
         })
 
         this.highlightedIDs = features.slice(0, 8).map((feature) => feature.id)
-
-
 
         this.highlightedIDs.forEach((id) => {
           this.map.setFeatureState({
