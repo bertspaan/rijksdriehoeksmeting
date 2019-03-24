@@ -39,8 +39,6 @@ export default {
     }, 500),
     sendData: function () {
       if (this.map) {
-        // const bounds = this.map.getBounds().toArray()
-
         const features = this.map.queryRenderedFeatures({
           layers: ['points']
         })
@@ -75,14 +73,8 @@ export default {
     })
   },
   mounted: function () {
-
-
-    // turf.envelope(features);
-
-
     // Idee: laat rechthoek zien
     // var features = map.queryRenderedFeatures(bbox, { layers: ['counties'] });
-
 
     // eslint-disable-next-line
     // const map = new mapboxgl.Map({
@@ -133,12 +125,8 @@ export default {
       hash: true
     })
 
-
     map.on('load', () => {
-      // let firstSymbolId = 'waterway-label'
-
       axios
-        // TODO: make locations-small.geojson
         .get('locations.client.geojson')
         .then((response) => {
           this.locations = response.data
@@ -226,10 +214,6 @@ export default {
   height: 100vh;
 }
 
-header {
-
-}
-
 main {
   width: 100%;
   height: 100%;
@@ -256,9 +240,7 @@ footer div {
   display: inline-block;
   background-color: #ed1c24;
   color: white;
-  /* width: 400px; */
   width: auto;
-  /* max-width: 100%; */
   padding: 10px;
 }
 </style>
