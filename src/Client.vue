@@ -2,17 +2,22 @@
   <div id="app">
     <header>
       <div class="dutch">
-        Beweeg de kaart
+        Beweeg de kaart om foto's op het scherm te tonen
       </div>
       <div class="english">
-        Move the map!
+        Move the map to display photos on the screen
       </div>
     </header>
     <main>
       <div id="map" />
       <footer v-if="!active">
       <div>
-        Nee, het is niet goed! Wacht even tot de ander klaar is
+       <div class="dutch">
+        Een moment geduld a.u.b.: het scherm wordt momenteel door iemand anders bediend
+       </div>
+       <div class="english">
+         One moment, please: someone else is currently operating the screen
+       </div>
       </div>
     </footer>
     </main>
