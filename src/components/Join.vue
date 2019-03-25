@@ -6,17 +6,19 @@
     <hr class="vertical-line" />
     <div class="text">
       <div class="dutch">
-        <h2>Animatie van meetpunten</h2>
+        <h2>Meetpunten</h2>
         <p>
-          8274 foto's van meetpunten in Nederland. Ga naar <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a>
-          en zoek de rijksdriehoeksmeetpunten in je eigen woonplaats op de kaart.
+        Verken een collectie van 8274 foto's van meetpunten gebruikt voor de Rijksdriehoeksmeting uit de periode 1880-1960. 
+        Scan de QR-code of open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> op uw telefoon. 
+        Wanneer u inzoomt op een bepaalde regio, worden de foto’s getoond op het scherm.
         </p>
       </div>
       <div class="english">
-        <h2>Animation of measuring points</h2>
+        <h2>Measuring points</h2>
         <p>
-          8274 photos or measuring points in the Netherlands. Visit <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a>
-          and find
+        Browse a collection of 8274 photos of measuring points used for the National Triangulation network, from 1880-1960. 
+        Scan the QR-code or open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> on your phone. 
+        When you zoom in on a particular region, the photos are displayed on the screen.
         </p>
       </div>
       <div class="qrcode">
@@ -24,8 +26,8 @@
           <img src="../assets/qrcode.svg" />
         </div>
         <p>
-          <a href="http://landmeten.tudelft.nl/rijksdriehoeksmeting">landmeten.tudelft.nl/
-          <br />rijksdriehoeksmeting</a>
+          <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/
+          <br />tentoonstelling</a>
         </p>
       </div>
     </div>
