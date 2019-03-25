@@ -4,10 +4,6 @@
 </template>
 
 <script>
-
-// https://dlc.services/thumbs/7/1/${iiifId}/full/,400/0/default.jpg
-// https://dlc.services/iiif-img/7/1/0bb867be-a0e7-4e20-bc3a-21a19a5a062a/full/full/0/default.jpg
-
 export default {
   name: 'iiifImage',
   props: {

@@ -24,8 +24,8 @@
           <img src="../assets/qrcode.svg" />
         </div>
         <p>
-          <a href="https://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/
-          <br />tentoonstelling</a>
+          <a href="http://landmeten.tudelft.nl/rijksdriehoeksmeting">landmeten.tudelft.nl/
+          <br />rijksdriehoeksmeting</a>
         </p>
       </div>
     </div>
@@ -33,7 +33,6 @@
 </template>
 
 <script>
-
 import IIIFImage from './IIIFImage.vue'
 
 export default {
@@ -46,7 +45,7 @@ export default {
     return {
       interval: undefined,
       photo: undefined,
-      seconds: 5 * 1000
+      seconds: 10 * 1000
     }
   },
   watch: {
@@ -71,7 +70,6 @@ export default {
       window.clearInterval(this.interval)
     }
   }
-
 }
 </script>
 

@@ -13,8 +13,6 @@
             <li class="location" v-for="feature in client.locations" :key="feature.properties.photos[0].iiifId"
               :style="{
                 width: `${Math.floor(100 / client.locations.length )}%`
-                //width: `${Math.floor(100 / client.locations.length ) * (client.locations.length > 4 ? 2 : 1)}%`,
-                //height: client.locations.length > 4 ? '50%' : '100%'
               }">
               <IIIFImage :iiifId="feature.properties.photos[0].iiifId"
                 :dimensions="feature.properties.photos[0].dimensions" />
@@ -57,24 +55,6 @@ export default {
     }
   },
   methods: {
-    // locationsForBounds: function (bounds, limit=10) {
-    //   if (this.locations && this.tree) {
-    //     const results = this.tree.search({
-    //       minX: bounds[0][0],
-    //       minY: bounds[0][1],
-    //       maxX: bounds[1][0],
-    //       maxY: bounds[1][1]
-    //     })
-
-    //     const features = results.map((result) =>
-    //       this.locations.features[result.index]
-    //     )
-
-    //     return features.slice(0, limit)
-    //   }
-
-    //   return []
-    // },
     setClientData: function (clientId, data) {
       const timestamp = + new Date()
 
@@ -98,10 +78,8 @@ export default {
         this.selected = []
       }, this.ttl)
 
-
       this.update()
     },
-    // https://dlc.services/thumbs/7/1/00225b52-2bf3-491b-a3bb-d679e4e4e684/full/57,100/0/default.jpg
     update: function () {
       const selected = Object.entries(this.clientData)
         .map((pair) => {
@@ -143,7 +121,6 @@ export default {
 </script>
 
 <style>
-
 .clients {
   width: 100%;
 }
@@ -181,6 +158,5 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 </style>
