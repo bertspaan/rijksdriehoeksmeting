@@ -195,7 +195,6 @@ export default {
           // }, firstSymbolId)
 
           this.throttledSendData()
-
         })
     })
 

@@ -8,17 +8,17 @@
       <div class="dutch">
         <h2>Meetpunten</h2>
         <p>
-        Verken een collectie van 8274 foto's van meetpunten gebruikt voor de Rijksdriehoeksmeting uit de periode 1880-1960. 
-        Scan de QR-code of open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> op uw telefoon. 
-        Wanneer u inzoomt op een bepaalde regio, worden de foto’s getoond op het scherm.
+        Verken een collectie van 8274 foto's van meetpunten gebruikt voor de Rijksdriehoeksmeting uit de periode 1880–1960.
+        Scan de QR-code of open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> op uw telefoon.
+        Wanneer u inzoomt op een bepaalde regio, worden de foto’s getoond op dit scherm.
         </p>
       </div>
       <div class="english">
         <h2>Measuring points</h2>
         <p>
-        Browse a collection of 8274 photos of measuring points used for the National Triangulation network, from 1880-1960. 
-        Scan the QR-code or open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> on your phone. 
-        When you zoom in on a particular region, the photos are displayed on the screen.
+        Browse a collection of 8274 photos of measuring points used for the National Triangulation network, from 1880–1960.
+        Scan the QR-code or open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> on your phone.
+        When you zoom in on a particular region, the photos are displayed on this screen.
         </p>
       </div>
       <div class="qrcode">
@@ -38,7 +38,7 @@
 import IIIFImage from './IIIFImage.vue'
 
 export default {
-  name: 'join',
+  name: 'intro',
   props: ['locations'],
   components: {
     IIIFImage

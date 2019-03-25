@@ -22,7 +22,7 @@
       </ul>
     </template>
      <template v-else>
-       <Join :locations="locations" />
+       <Intro :locations="locations" />
      </template>
   </div>
 </template>
@@ -33,14 +33,14 @@ import axios from 'axios'
 import WebSocket from './components/mixins/WebSocket.js'
 
 import IIIFImage from './components/IIIFImage.vue'
-import Join from './components/Join.vue'
+import Intro from './components/Intro.vue'
 
 export default {
   name: 'display',
   mixins: [WebSocket],
   components: {
     IIIFImage,
-    Join
+    Intro
   },
   props: {
     getImageUrl: Function
