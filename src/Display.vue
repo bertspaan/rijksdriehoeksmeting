@@ -6,18 +6,28 @@
           :style="{
             width: `${Math.floor(100 / selected.length )}%`
           }">
-          <ol class="locations"
-            :style="{
-              gridTemplateColumns: `repeat(auto-fill, ${Math.round(100 / client.locations.length )}%)`
-            }">
-            <li class="location" v-for="feature in client.locations" :key="feature.properties.photos[0].iiifId"
+          <template v-if="client.locations.length">
+            <ol class="locations"
               :style="{
-                width: `${Math.floor(100 / client.locations.length )}%`
+                gridTemplateColumns: `repeat(auto-fill, ${Math.round(100 / client.locations.length )}%)`
               }">
-              <IIIFImage :iiifId="feature.properties.photos[0].iiifId"
-                :dimensions="feature.properties.photos[0].dimensions" />
-            </li>
-          </ol>
+              <li class="location" v-for="feature in client.locations" :key="feature.properties.photos[0].iiifId"
+                :style="{
+                  width: `${Math.floor(100 / client.locations.length )}%`
+                }">
+                <IIIFImage :iiifId="feature.properties.photos[0].iiifId"
+                  :dimensions="feature.properties.photos[0].dimensions" />
+              </li>
+            </ol>
+          </template>
+          <template v-else>
+            <div class="locations">
+              <div class="message">
+                <p class="dutch">Geen meetpunten gevonden in de buurt van deze locatie.</p>
+                <p class="english">No measuring points found around this location.</p>
+              </div>
+            </div>
+          </template>
         </li>
       </ul>
     </template>
@@ -121,6 +131,9 @@ export default {
 </script>
 
 <style>
+#app {
+}
+
 .clients {
   width: 100%;
 }
@@ -134,7 +147,7 @@ export default {
 }
 
 .client {
-  padding: 5px;
+  padding: 10px;
   flex-shrink: 0;
   box-sizing: border-box;
   height: 100vh;
@@ -158,5 +171,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.message {
+  text-align: center;
 }
 </style>

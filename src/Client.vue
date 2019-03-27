@@ -1,26 +1,52 @@
 <template>
   <div id="app">
     <header>
-      <div class="dutch">
-        Beweeg de kaart om foto's op het scherm te tonen
-      </div>
-      <div class="english">
-        Move the map to display photos on the screen
-      </div>
+      <span class="dutch">
+        Beweeg de kaart om foto’s op het scherm te tonen.
+      </span>
+      <span class="english">
+        Move the map to display photos on the screen.
+      </span>
     </header>
     <main>
-      <div id="map" />
-      <footer v-if="!active">
-      <div>
-       <div class="dutch">
-        Een moment geduld a.u.b.: het scherm wordt momenteel door iemand anders bediend
-       </div>
-       <div class="english">
-         One moment, please: someone else is currently operating the screen
-       </div>
+      <div id="map" ref="map"/>
+      <div class="rectangle-container" :style="{
+        padding: `${rectanglePadding}px`
+      }">
+        <div class="rectangle" />
+      </div>
+    </main>
+    <footer :class="{
+      active,
+      inactive: !active
+    }">
+      <div v-if="active">
+        <template v-if="highlightedIDs.length">
+          <span class="dutch">
+            De geselecteerde foto’s worden getoond op het scherm.
+          </span>
+          <span class="english">
+            The selected photos are displayed on the screen.
+          </span>
+        </template>
+        <template v-else>
+          <span class="dutch">
+            Geen meetpunten gevonden in de buurt van deze locatie.
+          </span>
+          <span class="english">
+            No measuring points found around this location.
+          </span>
+        </template>
+      </div>
+      <div v-else>
+        <span class="dutch">
+          Een moment geduld a.u.b.: het scherm wordt door iemand anders bediend.
+        </span>
+        <span class="english">
+          One moment, please: someone else is operating the screen.
+        </span>
       </div>
     </footer>
-    </main>
   </div>
 </template>
 
@@ -29,13 +55,36 @@ import axios from 'axios'
 import WebSocket from './components/mixins/WebSocket.js'
 import { throttle } from 'lodash'
 
+import KDBush from 'kdbush'
+const geokdbush = require('geokdbush')
+
 export default {
   name: 'client',
   mixins: [WebSocket],
   data () {
     return {
       active: true,
-      highlightedIDs: []
+      timeout: undefined,
+      highlightedIDs: [],
+      locations: [],
+      index: undefined,
+      ttl: 10 * 1000,
+      rectanglePadding: 30
+    }
+  },
+  watch: {
+    locations: function () {
+      this.index = new KDBush(this.locations.features,
+        (feature) => feature.geometry.coordinates[0], (feature) => feature.geometry.coordinates[1])
+    },
+    active: function () {
+      if (this.timeout) {
+        window.clearTimeout(this.timeout)
+      }
+
+      this.timeout = window.setTimeout(() => {
+        this.active = true
+      }, this.ttl)
     }
   },
   methods: {
@@ -43,9 +92,20 @@ export default {
       this.sendData()
     }, 500),
     sendData: function () {
-      if (this.map) {
-        const features = this.map.queryRenderedFeatures({
-          layers: ['points']
+      if (this.map && this.index && this.$refs.map) {
+        const limit = 8
+
+        const center = this.map.getCenter()
+
+        const rect = this.$refs.map.getBoundingClientRect()
+        const nw = this.map.unproject([this.rectanglePadding, this.rectanglePadding])
+        const se = this.map.unproject([rect.width - this.rectanglePadding, rect.height - this.rectanglePadding])
+
+        const nearest = geokdbush.around(this.index, center.lng, center.lat, limit, undefined, (feature) => {
+          const [lng, lat] =  feature.geometry.coordinates
+          const inLat = lat <= nw.lat && lat >= se.lat
+          const inLng = lng >= nw.lng && lng <= se.lng
+          return inLat && inLng
         })
 
         this.highlightedIDs.forEach((id) => {
@@ -57,7 +117,7 @@ export default {
           })
         })
 
-        this.highlightedIDs = features.slice(0, 8).map((feature) => feature.id)
+        this.highlightedIDs = nearest.map((feature) => feature.id)
 
         this.highlightedIDs.forEach((id) => {
           this.map.setFeatureState({
@@ -78,23 +138,6 @@ export default {
     })
   },
   mounted: function () {
-    // Idee: laat rechthoek zien
-    // var features = map.queryRenderedFeatures(bbox, { layers: ['counties'] });
-
-    // eslint-disable-next-line
-    // const map = new mapboxgl.Map({
-    //   container: 'map',
-    //   style: 'mapbox://styles/mapbox/dark-v9',
-    //   center: [
-    //     4.90706,
-    //     52.35663
-    //   ],
-    //   zoom: 13.2,
-    //   minZoom: 7,
-    //   maxZoom: 17,
-    //   hash: true
-    // })
-
     // eslint-disable-next-line
     const map = new mapboxgl.Map({
       container: 'map',
@@ -104,8 +147,6 @@ export default {
           'basemap': {
             type: 'raster',
             tiles: [
-              // 'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-              // 'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
               'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
               'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
               'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
@@ -137,36 +178,10 @@ export default {
           this.locations = response.data
           return this.locations
         }).then((locations) => {
-          // const voronoi = geoVoronoi.geoVoronoi(locations)
-          // const triangles = voronoi.triangles()
-
-          // const maxArea = 1000 * 1000 * 250
-
-          // const smallTriangles = {
-          //   type: 'FeatureCollection',
-          //   features: triangles.features
-          //     .filter((triangle) => area(envelope(triangle)) < maxArea)
-          // }
-
           map.addSource('points', {
             type: 'geojson',
             data: locations
           })
-
-          // map.addSource('triangles', {
-          //   type: 'geojson',
-          //   data: smallTriangles
-          // })
-
-          // map.addLayer({
-          //   id: 'triangles',
-          //   type: 'line',
-          //   source: 'triangles',
-          //   'paint': {
-          //     'line-color': '#fff',
-          //     'line-opacity': 0.2
-          //   }
-          // }, firstSymbolId)
 
           map.addLayer({
             id: 'points',
@@ -175,24 +190,22 @@ export default {
             paint: {
               'circle-radius': [
                 'interpolate', ['linear'], ['zoom'],
-                8, 3,
+                8, 4,
                 16, 10,
               ],
-              // 'circle-color': 'rgb(240, 75, 52)',
               'circle-opacity': ['case',
                 ['boolean', ['feature-state', 'highlight'], false],
                 1,
-                0.2
+                0.4
               ],
 
               'circle-color': ['case',
                 ['boolean', ['feature-state', 'highlight'], false],
-                'green',
-                'red'
+                '#ed1c24', // red
+                '#ede321' // yellow
               ]
             }
           })
-          // }, firstSymbolId)
 
           this.throttledSendData()
         })
@@ -210,17 +223,29 @@ export default {
 <style>
 @import './assets/fonts.css';
 
+body {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
 #app {
   display: flex;
   flex-direction: column;
 
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  font-size: 70%;
+  line-height: 1.2rem;
 }
 
 main {
-  width: 100%;
-  height: 100%;
+  flex-grow: 1;
+  position: relative;
 }
 
 #map {
@@ -228,23 +253,43 @@ main {
   height: 100%;
 }
 
-footer {
+.rectangle-container {
+  top: 0;
   position: absolute;
-  z-index: 1000;
-  bottom: 0;
   width: 100%;
+  height: 100%;
+  pointer-events: none;
   box-sizing: border-box;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
 }
 
-footer div {
+.rectangle {
+  border-style: dashed;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  border-width: 2px;
+  border-color: rgb(26, 43, 60);
+  width: 100%;
+  height: 100%;
+}
+
+header, footer {
   box-sizing: border-box;
-  display: inline-block;
+  padding: 8px;
+  text-align: center;
+}
+
+footer {
+  font-size: 85%;
+  line-height: 1rem;
+}
+
+footer.active {
+  color: black;
+  background-color: #eeec77;
+}
+
+footer.inactive {
   background-color: #ed1c24;
-  color: white;
-  width: auto;
-  padding: 10px;
 }
 </style>

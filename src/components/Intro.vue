@@ -66,6 +66,7 @@ export default {
   },
   mounted: function () {
     this.interval = window.setInterval(this.update, this.seconds)
+    this.update()
   },
   destroyed: function () {
     if (this.interval) {
