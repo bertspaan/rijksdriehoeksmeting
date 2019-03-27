@@ -61,7 +61,7 @@ export default {
       timeout: undefined,
       selected: [],
       clientData: {},
-      ttl: 10 * 1000
+      ttl: 20 * 1000
     }
   },
   methods: {
