@@ -168,7 +168,11 @@ export default {
       maxBounds: [[1.5, 49.8], [8.5, 55.0]],
       center: [4.922, 52.369],
       zoom: 9,
-      hash: true
+      hash: true,
+
+      pitchWithRotate: false,
+      dragRotate: false,
+      touchZoomRotate: false
     })
 
     map.on('load', () => {
