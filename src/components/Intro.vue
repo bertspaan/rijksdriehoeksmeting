@@ -47,7 +47,7 @@ export default {
     return {
       interval: undefined,
       photo: undefined,
-      seconds: 10 * 1000
+      seconds: 20 * 1000
     }
   },
   watch: {

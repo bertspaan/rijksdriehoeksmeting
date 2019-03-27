@@ -68,7 +68,7 @@ export default {
       highlightedIDs: [],
       locations: [],
       index: undefined,
-      ttl: 10 * 1000,
+      ttl: 20 * 1000,
       rectanglePadding: 30
     }
   },
