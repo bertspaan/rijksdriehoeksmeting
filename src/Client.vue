@@ -9,7 +9,9 @@
       </span>
     </header>
     <main>
-      <div id="map" ref="map"/>
+      <div class="map-container">
+        <div id="map" ref="map"/>
+      </div>
       <div class="rectangle-container" :style="{
         padding: `${rectanglePadding}px`
       }">
@@ -263,6 +265,14 @@ main {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  box-sizing: border-box;
+}
+
+.map-container {
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
 }
 
