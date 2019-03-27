@@ -173,8 +173,7 @@ export default {
       hash: true,
 
       pitchWithRotate: false,
-      dragRotate: false,
-      touchZoomRotate: false
+      dragRotate: false
     })
 
     map.on('load', () => {
