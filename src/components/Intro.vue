@@ -6,19 +6,32 @@
     <hr class="vertical-line" />
     <div class="text">
       <div class="dutch">
-        <h2>Meetpunten</h2>
+        <h2>Verken zelf de hoogste punten met uw telefoon </h2>
         <p>
-        Verken een collectie van 8274 foto's van meetpunten gebruikt voor de Rijksdriehoeksmeting uit de periode 1880–1960.
-        Scan de QR-code of open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> op uw telefoon.
-        Wanneer u inzoomt op een bepaalde regio, worden de foto’s getoond op dit scherm.
+          Herkent u de meetpunten die gebruikt zijn voor de Rijksdriehoeksmeting tussen 1880 en 1960?
+          Verken de digitale kaart met uw telefoon en zie hier op het scherm welke bouwwerken gebruikt werden als meetpunt.
+          Voor het raadplegen van de digitale kaart op uw telefoon:
+        </p>
+        <ul>
+          <li>Scan de QR-code hieronder met uw camera; </li>
+          <li>Of open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> in uw browser. </li>
+        </ul>
+        <p>
+          Als u inzoomt op de kaart, verschijnen de foto’s vanzelf op het beeldscherm.
         </p>
       </div>
       <div class="english">
-        <h2>Measuring points</h2>
+        <h2>Explore the highest points on your phone</h2>
         <p>
-        Browse a collection of 8274 photos of measuring points used for the National Triangulation network, from 1880–1960.
-        Scan the QR-code or open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> on your phone.
-        When you zoom in on a particular region, the photos are displayed on this screen.
+          Do you recognise the measuring points used for the National Triangulation network, from 1880 to 1960?
+          Browse this collection of photographs by opening the digital map on your phone:
+        <p>
+        <ul class="narrow">
+          <li>Scan the QR code on the right with your camera;</li>
+          <li>Or open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> in your browser.</li>
+        </ul>
+        <p class="narrow">
+          When you zoom in on a particular region, the photos are displayed on this screen.
         </p>
       </div>
       <div class="qrcode">
@@ -114,6 +127,10 @@ export default {
 
 .dutch h2 {
   margin-top: 0;
+}
+
+.narrow {
+  width: 70%;
 }
 
 .qrcode {
