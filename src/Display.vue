@@ -53,28 +53,7 @@ export default {
       } else {
         this.images = []
       }
-
-      // this.update()
-    },
-    // update: function () {
-    //   const selected = Object.entries(this.clientData)
-    //     .map((pair) => {
-    //       const clientId = pair[0]
-    //       const data = pair[1]
-
-    //       const ids = data.data
-
-    //       const locations = this.locations.features.filter((location) => {
-    //         return ids.includes(location.id)
-    //       })
-
-    //       return {
-    //         clientId,
-    //         locations
-    //       }
-    //     })
-    //   this.selected = selected
-    // }
+    }
   },
   created: function () {
     this.$on('ws:open', () => {

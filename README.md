@@ -14,7 +14,7 @@ To deploy the website to GitHub Pages, run:
 
     npm run deploy
 
-Edit [`vue.config.js`](vue.config.js) to edit the [`publicPath`](https://cli.vuejs.org/config/#publicpath).
+Edit [`vue.config.js`](vue.config.js) to edit the [`publicPath`](https://cli.vuejs.org/config/#publicpath), or set the `PUBLIC_PATH` environment variable with the path you want to use.
 
 ## IIIF
 
