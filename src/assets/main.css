@@ -55,6 +55,10 @@ body {
   margin: 0;
   padding: 0;
 
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
   font-size: 1rem;
   line-height: 1.5rem;
 }
@@ -67,6 +71,9 @@ html, body {
   font-family: NEXTBook, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  width: 100%;
+  height: 100%;
 }
 
 #app, a, a:visited {

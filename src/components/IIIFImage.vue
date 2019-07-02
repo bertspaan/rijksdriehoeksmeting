@@ -4,22 +4,24 @@
 </template>
 
 <script>
+const BASE_URL = 'https://dlc.services/thumbs/7/1'
+const IMAGE_SIZES = [
+  100,
+  200,
+  400,
+  1024
+]
+
 export default {
   name: 'iiifImage',
   props: {
-    'iiifId': String,
-    'dimensions': Array
+    iiifId: String,
+    dimensions: Array
   },
   data () {
     return {
-      // baseUrl: 'https://dlc.services/iiif-img/7/1',
-      baseUrl: 'https://dlc.services/thumbs/7/1',
-      thumbnailSizes: [
-        100,
-        200,
-        400,
-        1024
-      ]
+      baseUrl: BASE_URL,
+      imageSizes: IMAGE_SIZES
     }
   },
   methods: {
@@ -35,17 +37,17 @@ export default {
       return this.dimensions[0] > this.dimensions[1] ? 'landscape' : 'portrait'
     },
     imgSrcset: function () {
-      return this.thumbnailSizes.map((size) => `${this.url(size)} ${size}w`)
+      return this.imageSizes.map((size) => `${this.url(size)} ${size}w`)
         .join(', ')
     },
     imgSizes: function () {
-      const n = this.thumbnailSizes.length
-      return this.thumbnailSizes
+      const n = this.imageSizes.length
+      return this.imageSizes
         .map((size, index) => `${index < n - 1 ? `(max-width: ${size})` : ''} ${size}px`)
         .join(', ')
     },
     imgSrc: function () {
-      return this.url(this.thumbnailSizes[this.thumbnailSizes.length - 1])
+      return this.url(this.imageSizes[this.imageSizes.length - 1])
     }
   }
 }

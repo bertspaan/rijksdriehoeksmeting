@@ -1,22 +1,22 @@
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/tentoonstelling'
+    ? process.env.PUBLIC_PATH || '/rijksdriehoeksmeting'
     : '/',
   pages: {
-    index: {
-      entry: 'src/client.js',
+    standalone: {
+      entry: 'src/standalone.js',
       template: 'public/index.html',
       filename: 'index.html'
     },
+    client: {
+      entry: 'src/client.js',
+      template: 'public/tentoonstelling/index.html',
+      filename: 'tentoonstelling/index.html'
+    },
     display: {
       entry: 'src/display.js',
-      template: 'public/display/index.html',
-      filename: 'display/index.html',
-    },
-    exhibition: {
-      entry: 'src/exhibition.js',
-      template: 'public/display/index.html',
-      filename: 'exhibition/index.html',
+      template: 'public/tentoonstelling/display/index.html',
+      filename: 'tentoonstelling/display/index.html'
     }
   }
 }

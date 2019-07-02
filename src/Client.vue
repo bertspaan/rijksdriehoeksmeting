@@ -9,21 +9,18 @@
       </span>
     </header>
     <main>
-      <div class="map-container">
-        <div id="map" ref="map"/>
-      </div>
-      <div class="rectangle-container" :style="{
-        padding: `${rectanglePadding}px`
-      }">
-        <div class="rectangle" />
-      </div>
+      <template v-if="locations">
+        <Map :locations="locations" v-on:update="updateImages" />
+      </template>
+      <template v-else>
+      </template>
     </main>
     <footer :class="{
       active,
       inactive: !active
     }">
       <div v-if="active">
-        <template v-if="highlightedIDs.length">
+        <template v-if="ids.length">
           <span class="dutch">
             De geselecteerde foto’s worden getoond op het scherm.
           </span>
@@ -54,31 +51,25 @@
 
 <script>
 import axios from 'axios'
+import Map from './components/Map.vue'
 import WebSocket from './components/mixins/WebSocket.js'
-import { throttle } from 'lodash'
-
-import KDBush from 'kdbush'
-const geokdbush = require('geokdbush')
 
 export default {
   name: 'client',
   mixins: [WebSocket],
+  components: {
+    Map
+  },
   data () {
     return {
       active: true,
       timeout: undefined,
-      highlightedIDs: [],
-      locations: [],
-      index: undefined,
-      ttl: 20 * 1000,
-      rectanglePadding: 30
+      ids: [],
+      locations: undefined,
+      ttl: 20 * 1000
     }
   },
   watch: {
-    locations: function () {
-      this.index = new KDBush(this.locations.features,
-        (feature) => feature.geometry.coordinates[0], (feature) => feature.geometry.coordinates[1])
-    },
     active: function () {
       if (this.timeout) {
         window.clearTimeout(this.timeout)
@@ -90,48 +81,9 @@ export default {
     }
   },
   methods: {
-    throttledSendData: throttle(function () {
-      this.sendData()
-    }, 500),
-    sendData: function () {
-      if (this.map && this.index && this.$refs.map) {
-        const limit = 8
-
-        const center = this.map.getCenter()
-
-        const rect = this.$refs.map.getBoundingClientRect()
-        const nw = this.map.unproject([this.rectanglePadding, this.rectanglePadding])
-        const se = this.map.unproject([rect.width - this.rectanglePadding, rect.height - this.rectanglePadding])
-
-        const nearest = geokdbush.around(this.index, center.lng, center.lat, limit, undefined, (feature) => {
-          const [lng, lat] =  feature.geometry.coordinates
-          const inLat = lat <= nw.lat && lat >= se.lat
-          const inLng = lng >= nw.lng && lng <= se.lng
-          return inLat && inLng
-        })
-
-        this.highlightedIDs.forEach((id) => {
-          this.map.setFeatureState({
-            id,
-            source: 'points'
-          }, {
-            highlight: false
-          })
-        })
-
-        this.highlightedIDs = nearest.map((feature) => feature.id)
-
-        this.highlightedIDs.forEach((id) => {
-          this.map.setFeatureState({
-            id,
-            source: 'points'
-          }, {
-            highlight: true
-          })
-        })
-
-        this.wsSend('client', this.highlightedIDs)
-      }
+    updateImages: function (ids) {
+      this.ids = ids
+      this.wsSend('client', this.ids)
     }
   },
   created: function () {
@@ -140,93 +92,18 @@ export default {
     })
   },
   mounted: function () {
-    // eslint-disable-next-line
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: {
-        version: 8,
-        sources: {
-          'basemap': {
-            type: 'raster',
-            tiles: [
-              'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-              'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-              'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-              'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
-            ],
-            tileSize: 256
-          }
-        },
-        layers: [{
-          id: 'basemap',
-          type: 'raster',
-          source: 'basemap',
-          minzoom: 7,
-          maxzoom: 17
-        }]
-      },
-      minZoom: 7,
-      maxZoom: 16.5,
-      maxBounds: [[1.5, 49.8], [8.5, 55.0]],
-      center: [4.922, 52.369],
-      zoom: 9,
-      hash: true,
-
-      pitchWithRotate: false,
-      dragRotate: false
-    })
-
-    map.on('load', () => {
-      axios
-        .get('locations.client.geojson')
-        .then((response) => {
-          this.locations = response.data
-          return this.locations
-        }).then((locations) => {
-          map.addSource('points', {
-            type: 'geojson',
-            data: locations
-          })
-
-          map.addLayer({
-            id: 'points',
-            type: 'circle',
-            source: 'points',
-            paint: {
-              'circle-radius': [
-                'interpolate', ['linear'], ['zoom'],
-                8, 4,
-                16, 10,
-              ],
-              'circle-opacity': ['case',
-                ['boolean', ['feature-state', 'highlight'], false],
-                1,
-                0.4
-              ],
-
-              'circle-color': ['case',
-                ['boolean', ['feature-state', 'highlight'], false],
-                '#ed1c24', // red
-                '#ede321' // yellow
-              ]
-            }
-          })
-
-          this.throttledSendData()
-        })
-    })
-
-    map.on('move', () => {
-      this.throttledSendData()
-    })
-
-    this.map = map
+    axios
+      .get('../locations.display.geojson')
+      .then((response) => {
+        this.locations = response.data
+        return this.locations
+      })
   }
 }
 </script>
 
 <style>
-@import './assets/fonts.css';
+@import './assets/main.css';
 
 body {
   position: absolute;
@@ -251,39 +128,6 @@ body {
 main {
   flex-grow: 1;
   position: relative;
-}
-
-#map {
-  width: 100%;
-  height: 100%;
-}
-
-.rectangle-container {
-  top: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  box-sizing: border-box;
-}
-
-.map-container {
-  top: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.rectangle {
-  border-style: dashed;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-
-  border-width: 2px;
-  border-color: rgb(26, 43, 60);
-  width: 100%;
-  height: 100%;
 }
 
 header, footer {

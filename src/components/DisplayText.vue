@@ -1,8 +1,11 @@
 <template>
   <div class="panes">
-    <div class="location">
-      <IIIFImage v-if="photo" :iiifId="photo.iiifId" :dimensions="photo.dimensions" />
-    </div>
+    <template v-if="randomImage">
+      <Images :images="[randomImage]" />
+    </template>
+    <template v-else>
+      <div></div>
+    </template>
     <hr class="vertical-line" />
     <div class="text">
       <div class="dutch">
@@ -48,18 +51,20 @@
 </template>
 
 <script>
-import IIIFImage from './IIIFImage.vue'
+import Images from './Images.vue'
 
 export default {
-  name: 'intro',
-  props: ['locations'],
+  name: 'display-text',
+  props: {
+    locations: Object
+  },
   components: {
-    IIIFImage
+    Images
   },
   data () {
     return {
       interval: undefined,
-      photo: undefined,
+      randomImage: undefined,
       seconds: 20 * 1000
     }
   },
@@ -73,7 +78,7 @@ export default {
       if (this.$props.locations) {
         const features = this.$props.locations.features
         const index = Math.round(Math.random() * features.length)
-        this.photo = features[index].properties.photos[0]
+        this.randomImage = features[index]
       }
     }
   },
@@ -90,7 +95,7 @@ export default {
 </script>
 
 <style scoped>
-@import '../assets/fonts.css';
+@import '../assets/main.css';
 
 .panes {
   box-sizing: border-box;
@@ -102,6 +107,10 @@ export default {
 
 .panes > * {
   width: 50%;
+}
+
+.image {
+
 }
 
 .vertical-line {

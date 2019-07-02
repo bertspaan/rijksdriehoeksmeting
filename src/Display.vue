@@ -1,38 +1,10 @@
 <template>
   <div id="app">
-    <template v-if="selected.length">
-      <ul class="clients">
-        <li v-for="(client) in selected" :key="client.clientId" class="client"
-          :style="{
-            width: `${Math.floor(100 / selected.length )}%`
-          }">
-          <template v-if="client.locations.length">
-            <ol class="locations"
-              :style="{
-                gridTemplateColumns: `repeat(auto-fill, ${Math.round(100 / client.locations.length )}%)`
-              }">
-              <li class="location" v-for="feature in client.locations" :key="feature.properties.photos[0].iiifId"
-                :style="{
-                  width: `${Math.floor(100 / client.locations.length )}%`
-                }">
-                <IIIFImage :iiifId="feature.properties.photos[0].iiifId"
-                  :dimensions="feature.properties.photos[0].dimensions" />
-              </li>
-            </ol>
-          </template>
-          <template v-else>
-            <div class="locations">
-              <div class="message">
-                <p class="dutch">Geen meetpunten gevonden in de buurt van deze locatie.</p>
-                <p class="english">No measuring points found around this location.</p>
-              </div>
-            </div>
-          </template>
-        </li>
-      </ul>
+    <template v-if="images.length || timeout">
+      <Images :images="images" />
     </template>
      <template v-else>
-       <Intro :locations="locations" />
+       <DisplayText :locations="locations" />
      </template>
   </div>
 </template>
@@ -42,15 +14,17 @@ import axios from 'axios'
 
 import WebSocket from './components/mixins/WebSocket.js'
 
+import Images from './components/Images.vue'
 import IIIFImage from './components/IIIFImage.vue'
-import Intro from './components/Intro.vue'
+import DisplayText from './components/DisplayText.vue'
 
 export default {
   name: 'display',
   mixins: [WebSocket],
   components: {
+    Images,
     IIIFImage,
-    Intro
+    DisplayText
   },
   props: {
     getImageUrl: Function
@@ -59,56 +33,48 @@ export default {
     return {
       locations: undefined,
       timeout: undefined,
-      selected: [],
+      images: [],
       clientData: {},
       ttl: 20 * 1000
     }
   },
   methods: {
-    setClientData: function (clientId, data) {
-      const timestamp = + new Date()
-
-      Object.entries(this.clientData)
-        .forEach((pair) => {
-          if (pair[1].timestamp + this.ttl < timestamp) {
-            delete this.clientData[pair[0]]
-          }
-        })
-
-      this.clientData[clientId] = {
-        timestamp,
-        data
-      }
-
+    update: function (ids) {
       if (this.timeout) {
         window.clearTimeout(this.timeout)
       }
 
-      this.timeout = window.setTimeout(() => {
-        this.selected = []
-      }, this.ttl)
+      if (ids) {
+        this.images = ids.map((id) => this.locations.features[id])
 
-      this.update()
+        this.timeout = window.setTimeout(() => {
+          this.images = []
+        }, this.ttl)
+      } else {
+        this.images = []
+      }
+
+      // this.update()
     },
-    update: function () {
-      const selected = Object.entries(this.clientData)
-        .map((pair) => {
-          const clientId = pair[0]
-          const data = pair[1]
+    // update: function () {
+    //   const selected = Object.entries(this.clientData)
+    //     .map((pair) => {
+    //       const clientId = pair[0]
+    //       const data = pair[1]
 
-          const ids = data.data
+    //       const ids = data.data
 
-          const locations = this.locations.features.filter((location) => {
-            return ids.includes(location.id)
-          })
+    //       const locations = this.locations.features.filter((location) => {
+    //         return ids.includes(location.id)
+    //       })
 
-          return {
-            clientId,
-            locations
-          }
-        })
-      this.selected = selected
-    }
+    //       return {
+    //         clientId,
+    //         locations
+    //       }
+    //     })
+    //   this.selected = selected
+    // }
   },
   created: function () {
     this.$on('ws:open', () => {
@@ -116,7 +82,7 @@ export default {
     })
 
     this.$on('ws:message', (message) => {
-      this.setClientData(message.clientId, message.data)
+      this.update(message.data)
     })
   },
   mounted: function () {
@@ -131,8 +97,7 @@ export default {
 </script>
 
 <style>
-#app {
-}
+@import './assets/main.css';
 
 .clients {
   width: 100%;
