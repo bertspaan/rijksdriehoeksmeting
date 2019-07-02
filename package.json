@@ -9,7 +9,7 @@
     "deploy": "npm run build; push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "geokdbush": "^1.1.0",
     "kdbush": "^3.0.0",
     "lodash": "^4.17.11",
