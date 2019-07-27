@@ -109,17 +109,6 @@ export default {
   width: 50%;
 }
 
-.image {
-
-}
-
-.vertical-line {
-  background-color: white;
-  width: 4px;
-  margin: 0 1em;
-  flex-shrink: 0;
-}
-
 .location {
   text-align: center;
 }
@@ -140,6 +129,13 @@ export default {
 
 .narrow {
   width: 70%;
+}
+
+.vertical-line {
+  background-color: white;
+  width: 4px;
+  margin: 0 1em;
+  flex-shrink: 0;
 }
 
 .qrcode {

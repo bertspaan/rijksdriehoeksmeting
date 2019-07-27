@@ -95,6 +95,30 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
+.message {
+  box-sizing: border-box;
+  text-align: center;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.horizontal-line {
+  background-color: white;
+  height: 4px;
+  margin: 1em 0;
+  flex-shrink: 0;
+}
+
+.vertical-line {
+  background-color: white;
+  width: 4px;
+  margin: 0 1em;
+  flex-shrink: 0;
+}
+
 .dutch h1,
 .dutch h2,
 .dutch h3 {
@@ -113,4 +137,21 @@ h2 {
 
 .english {
   font-weight: 300;
+}
+
+button {
+  font-size: 100%;
+  color: white;
+  font-family: NEXTBook, Helvetica, Arial, sans-serif;
+  text-decoration: underline;
+  border-color: white;
+  border-style: solid;
+  padding: .4em .8em;
+  border-radius: 5px;
+  background: none;
+  box-sizing: border-box;
+}
+
+button:hover, button:active {
+  background-color: rgba(255, 255, 255, .3);
 }

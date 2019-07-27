@@ -6,30 +6,34 @@
           :style="{
             width: `${Math.floor(100 / images.length )}%`
           }">
-          <IIIFImage :iiifId="image.properties.photos[0].iiifId"
+          <IIIFImage :iiifId="image.properties.photos[0].iiifId" v-on:click="click"
             :dimensions="image.properties.photos[0].dimensions" />
         </li>
       </transition-group>
     </template>
     <template v-else>
-      <div class="message">
-        <p class="dutch">Geen meetpunten gevonden in de buurt van deze locatie.</p>
-        <p class="english">No measuring points found around this location.</p>
-      </div>
+      <NoImagesFound />
     </template>
   </div>
 </template>
 
 <script>
 import IIIFImage from './IIIFImage.vue'
+import NoImagesFound from './NoImagesFound.vue'
 
 export default {
   name: 'images',
   components: {
-    IIIFImage
+    IIIFImage,
+    NoImagesFound
   },
   props: {
     images: Array
+  },
+  methods: {
+    click: function (iiifId, dimensions) {
+      this.$emit('select-image', iiifId, dimensions)
+    }
   }
 }
 </script>
@@ -41,6 +45,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .images {

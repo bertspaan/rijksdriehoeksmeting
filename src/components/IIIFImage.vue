@@ -1,6 +1,6 @@
 <template>
   <img :srcset="this.imgSrcset" :sizes="this.imgSizes"
-    :src="this.imgSrc" />
+    v-on:click="click" :src="this.imgSrc" />
 </template>
 
 <script>
@@ -30,6 +30,9 @@ export default {
     },
     url: function (size) {
       return `${this.baseUrl}/${this.iiifId}/full/${this.sizeStr(size)}/0/default.jpg`
+    },
+    click: function () {
+      this.$emit('click', this.iiifId, this.dimensions)
     }
   },
   computed: {

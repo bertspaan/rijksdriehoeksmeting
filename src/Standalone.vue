@@ -1,19 +1,25 @@
 <template>
   <div id="app">
-    <template v-if="locations">
-      <Map :locations="locations" v-on:update="updateImages" />
-      <template v-if="showIntro">
-        <StandaloneText type="intro" />
-      </template>
-      <template v-else-if="images.length">
-        <Images :images="images" />
-      </template>
-      <template v-else>
-        <StandaloneText type="empty" />
+    <template v-if="showIntro">
+      <StandaloneText v-on:close="showIntro = false" />
+    </template>
+    <template v-else-if="locations">
+      <div id="split">
+        <Map :locations="locations" v-on:update="updateImages" />
+        <template v-if="images.length">
+          <Images :images="images" v-on:select-image="modalImage"/>
+        </template>
+        <template v-else>
+          <NoImagesFound />
+        </template>
+      </div>
+      <template v-if="modal">
+        <ModalImage :iiifId="modal.iiifId" :dimensions="modal.dimensions"
+          v-on:close="modal=undefined" />
       </template>
     </template>
     <template v-else>
-      Laden…
+      <Loading />
     </template>
   </div>
 </template>
@@ -23,14 +29,20 @@ import axios from 'axios'
 
 import Map from './components/Map.vue'
 import Images from './components/Images.vue'
+import Loading from './components/Loading.vue'
+import ModalImage from './components/ModalImage.vue'
 import StandaloneText from './components/StandaloneText.vue'
+import NoImagesFound from './components/NoImagesFound.vue'
 
 export default {
   name: 'standalone',
   components: {
     Map,
     Images,
-    StandaloneText
+    StandaloneText,
+    NoImagesFound,
+    Loading,
+    ModalImage
   },
   props: {
     getImageUrl: Function
@@ -39,7 +51,8 @@ export default {
     return {
       showIntro: true,
       locations: undefined,
-      images: []
+      images: [],
+      modal: undefined
     }
   },
   methods: {
@@ -48,6 +61,12 @@ export default {
         this.showIntro = false
       }
       this.images = ids.map((id) => this.locations.features[id])
+    },
+    modalImage: function (iiifId, dimensions) {
+      this.modal = {
+        iiifId,
+        dimensions
+      }
     }
   },
   mounted: function () {
@@ -64,24 +83,26 @@ export default {
 <style>
 @import './assets/main.css';
 
-#app {
+#split {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
-#app > * {
+#split > * {
   width: 50%;
   height: 100%;
 }
 
 @media screen and (orientation: portrait) {
-  #app {
+  #split {
     flex-direction: column;
   }
 
-  #app > * {
+  #split > * {
     width: 100%;
     height: 50%;
   }
