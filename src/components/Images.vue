@@ -2,12 +2,12 @@
   <div class="container">
     <template v-if="images.length">
       <transition-group name="list-complete" tag="ol" class="images">
-        <li class="image list-complete-item" v-for="image in images" :key="image.properties.photos[0].iiifId"
+        <li class="image list-complete-item" v-for="photo in photos" :key="photo.iiifId"
           :style="{
-            width: `${Math.floor(100 / images.length )}%`
+            width: `${Math.floor(100 / photos.length )}%`
           }">
-          <IIIFImage :iiifId="image.properties.photos[0].iiifId" v-on:click="click"
-            :dimensions="image.properties.photos[0].dimensions" />
+          <IIIFImage :iiifId="photo.iiifId" v-on:click="click"
+            :dimensions="photo.dimensions" />
         </li>
       </transition-group>
     </template>
@@ -29,6 +29,15 @@ export default {
   },
   props: {
     images: Array
+  },
+  computed: {
+    photos: function () {
+      if (this.images.length > 2) {
+        return this.images.map((image) => image.properties.photos[0])
+      } else {
+        return this.images.map((image) => image.properties.photos).flat()
+      }
+    }
   },
   methods: {
     click: function (iiifId, dimensions) {
