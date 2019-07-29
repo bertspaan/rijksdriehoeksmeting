@@ -6,13 +6,13 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "npm run build; push-dir --dir=dist --branch=landmeten-tudelft-nl --cleanup"
+    "deploy": "npm run build; push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
     "axios": "^0.18.1",
     "geokdbush": "^1.1.0",
     "kdbush": "^3.0.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "rbush": "^2.0.2",
     "reconnecting-websocket": "^4.1.10",
     "vue": "^2.6.10"
