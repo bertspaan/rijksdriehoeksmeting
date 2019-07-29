@@ -18,7 +18,7 @@
         <li>Dataset: Herman de Koning</li>
         <li>Applicatie: Bert Spaan</li>
       </ul>
-      <p class="light">De broncode en data staat <a href="https://github.com/bertspaan/rijksdriehoeksmeting">op GitHub</a>.</p>
+      <p class="light">De broncode en data staan <a href="https://github.com/bertspaan/rijksdriehoeksmeting">op GitHub</a>.</p>
     </div>
     <hr class="horizontal-line" />
     <div class="english">
@@ -39,7 +39,7 @@
         <li>Dataset: Herman de Koning</li>
         <li>Application: Bert Spaan</li>
       </ul>
-      <p class="light">The source code and data is available <a href="https://github.com/bertspaan/rijksdriehoeksmeting">on GitHub</a>.</p>
+      <p class="light">The source code and data are available <a href="https://github.com/bertspaan/rijksdriehoeksmeting">on GitHub</a>.</p>
     </div>
   </div>
 </template>

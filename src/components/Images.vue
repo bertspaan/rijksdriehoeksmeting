@@ -85,6 +85,7 @@ export default {
   height: 100%;
   box-sizing: border-box;
   padding: 5px;
+  text-align: center;
 
   display: flex;
   align-items: center;
