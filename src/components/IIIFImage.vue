@@ -1,5 +1,5 @@
 <template>
-  <img :srcset="this.imgSrcset" :sizes="this.imgSizes"
+  <img :srcset="this.imgSrcset" :sizes="this.imgSizes" style="cursor: pointer;"
     v-on:click="click" :src="this.imgSrc" />
 </template>
 

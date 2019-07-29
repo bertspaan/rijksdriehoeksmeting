@@ -150,6 +150,7 @@ button {
   border-radius: 5px;
   background: none;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 button:hover, button:active {

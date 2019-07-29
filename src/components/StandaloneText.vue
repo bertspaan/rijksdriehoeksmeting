@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="dutch">
-      <Images :images="images1" />
+      <Images :images="images1" v-on:select-image="close"/>
       <p>
         Verken via de kaart meer dan 8000 foto's van meetpunten van de Rijksdriehoeksmeting.
       </p>
@@ -9,19 +9,20 @@
         Deze website is gemaakt voor de tentoonstelling <a href="https://www.panorama-mesdag.nl/ontdek/tentoonstellingen/vanaf-het-hoogste-punt-landmeten-in-mesdags-tijd/">Vanaf het Hoogste Punt: Landmeten in Mesdags Tijd</a>,
         te zien tot en met 22 september 2019 in Panorama Mesdag.
       </p>
-      <ul>
+      <div class="centered">
+        <button v-on:click="close">Start</button>
+      </div>
+      <ul class="light">
         <li>Tentoonstelling: Panorama Mesdag &amp; TU Delft Library</li>
         <li>Fotocollectie: Kadastermuseum</li>
         <li>Dataset: Herman de Koning</li>
         <li>Applicatie: Bert Spaan</li>
       </ul>
-      <div class="centered">
-        <button v-on:click="close">Start</button>
-      </div>
+      <p class="light">De broncode en data staat <a href="https://github.com/bertspaan/rijksdriehoeksmeting">op GitHub</a>.</p>
     </div>
     <hr class="horizontal-line" />
     <div class="english">
-      <Images :images="images2" />
+      <Images :images="images2" v-on:select-image="close"/>
       <p>
         Use the map to explore more than 8000 photos of the Dutch National Triangulation Network.
       <p>
@@ -29,15 +30,16 @@
         This website is made for the the exhibition <a href="https://www.panorama-mesdag.nl/ontdek/tentoonstellingen/vanaf-het-hoogste-punt-landmeten-in-mesdags-tijd/">Vanaf het Hoogste Punt: Landmeten in Mesdags Tijd</a>,
          through 22 september 2019 in Panorama Mesdag.
       </p>
-      <ul>
+      <div class="centered">
+        <button v-on:click="close">Start</button>
+      </div>
+      <ul class="light">
         <li>Exhibition: Panorama Mesdag &amp; TU Delft Library</li>
         <li>Foto collection: Kadastermuseum</li>
         <li>Dataset: Herman de Koning</li>
         <li>Application: Bert Spaan</li>
       </ul>
-      <div class="centered">
-        <button v-on:click="close">Start</button>
-      </div>
+      <p class="light">The source code and data is available <a href="https://github.com/bertspaan/rijksdriehoeksmeting">on GitHub</a>.</p>
     </div>
   </div>
 </template>
@@ -101,5 +103,10 @@ h2 {
 
 .centered {
   text-align: center;
+}
+
+.light {
+  font-weight: lighter;
+  font-size: smaller;
 }
 </style>
