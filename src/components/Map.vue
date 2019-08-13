@@ -157,9 +157,10 @@ export default {
 <style scoped>
 
 .component {
-  width: 100%;
+  top: 0;
+  left: 0;
   height: 100%;
-  position: relative;
+  width: 100%;
 }
 
 .map-container {

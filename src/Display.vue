@@ -15,7 +15,6 @@ import axios from 'axios'
 import WebSocket from './components/mixins/WebSocket.js'
 
 import Images from './components/Images.vue'
-import IIIFImage from './components/IIIFImage.vue'
 import DisplayText from './components/DisplayText.vue'
 
 export default {
@@ -23,7 +22,6 @@ export default {
   mixins: [WebSocket],
   components: {
     Images,
-    IIIFImage,
     DisplayText
   },
   props: {
@@ -49,6 +47,9 @@ export default {
 
         this.timeout = window.setTimeout(() => {
           this.images = []
+
+          window.clearTimeout(this.timeout)
+          this.timeout = undefined
         }, this.ttl)
       } else {
         this.images = []

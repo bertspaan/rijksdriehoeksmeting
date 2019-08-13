@@ -95,6 +95,7 @@ export default {
 #split > * {
   width: 50%;
   height: 100%;
+  position: relative;
 }
 
 @media screen and (orientation: portrait) {

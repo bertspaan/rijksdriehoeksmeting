@@ -78,7 +78,14 @@ export default {
       if (this.$props.locations) {
         const features = this.$props.locations.features
         const index = Math.round(Math.random() * features.length)
-        this.randomImage = features[index]
+
+        this.randomImage = {
+          ...features[index],
+          properties: {
+            ...features[index].properties,
+            photos: [features[index].properties.photos[0]]
+          }
+        }
       }
     }
   },

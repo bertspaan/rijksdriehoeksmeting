@@ -13,6 +13,7 @@
         <Map :locations="locations" v-on:update="updateImages" />
       </template>
       <template v-else>
+        <Loading />
       </template>
     </main>
     <footer :class="{
@@ -52,13 +53,15 @@
 <script>
 import axios from 'axios'
 import Map from './components/Map.vue'
+import Loading from './components/Loading.vue'
 import WebSocket from './components/mixins/WebSocket.js'
 
 export default {
   name: 'client',
   mixins: [WebSocket],
   components: {
-    Map
+    Map,
+    Loading
   },
   data () {
     return {
@@ -128,6 +131,7 @@ body {
 main {
   flex-grow: 1;
   position: relative;
+  display: flex;
 }
 
 header, footer {
