@@ -12,7 +12,7 @@
     "axios": "^0.18.1",
     "geokdbush": "^1.1.0",
     "kdbush": "^3.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "rbush": "^2.0.2",
     "reconnecting-websocket": "^4.1.10",
     "vue": "^2.6.10"
