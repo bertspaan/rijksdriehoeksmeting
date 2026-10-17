@@ -100,7 +100,7 @@ function click(iiifId: string, dimensions: Photo['dimensions']) {
   flex-shrink: 0;
 }
 
-.photo :deep(img) {
+.photo :deep(.iiif-image) {
   display: block;
   width: 100%;
   height: 100%;
