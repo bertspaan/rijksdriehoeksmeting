@@ -28,7 +28,7 @@
         <p>
           Do you recognise the measuring points used for the National Triangulation network, from 1880 to 1960?
           Browse this collection of photographs by opening the digital map on your phone:
-        <p>
+        </p>
         <ul class="narrow">
           <li>Scan the QR code on the right with your camera;</li>
           <li>Or open <a href="http://landmeten.tudelft.nl/tentoonstelling">landmeten.tudelft.nl/tentoonstelling</a> in your browser.</li>
@@ -50,55 +50,31 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Images from './Images.vue'
+import type { Locations, LocationFeature } from '../types'
 
-export default {
-  name: 'display-text',
-  props: {
-    locations: Object
-  },
-  components: {
-    Images
-  },
-  data () {
-    return {
-      interval: undefined,
-      randomImage: undefined,
-      seconds: 20 * 1000
-    }
-  },
-  watch: {
-    locations: function () {
-      this.update()
-    }
-  },
-  methods: {
-    update: function () {
-      if (this.$props.locations) {
-        const features = this.$props.locations.features
-        const index = Math.round(Math.random() * features.length)
+const props = defineProps<{ locations?: Locations }>()
+const randomImage = ref<LocationFeature>()
+let interval: ReturnType<typeof setInterval> | undefined
 
-        this.randomImage = {
-          ...features[index],
-          properties: {
-            ...features[index].properties,
-            photos: [features[index].properties.photos[0]]
-          }
-        }
-      }
-    }
-  },
-  mounted: function () {
-    this.interval = window.setInterval(this.update, this.seconds)
-    this.update()
-  },
-  destroyed: function () {
-    if (this.interval) {
-      window.clearInterval(this.interval)
-    }
+function update() {
+  const features = props.locations?.features
+  if (!features?.length) return
+  const feature = features[Math.floor(Math.random() * features.length)]
+  randomImage.value = {
+    ...feature,
+    properties: { photos: [feature.properties.photos[0]] }
   }
 }
+
+watch(() => props.locations, update)
+onMounted(() => {
+  interval = setInterval(update, 20_000)
+  update()
+})
+onBeforeUnmount(() => clearInterval(interval))
 </script>
 
 <style scoped>

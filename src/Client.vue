@@ -10,7 +10,7 @@
     </header>
     <main>
       <template v-if="locations">
-        <Map :locations="locations" v-on:update="updateImages" />
+        <LocationsMap :locations="locations" v-on:update="updateImages" />
       </template>
       <template v-else>
         <Loading />
@@ -50,59 +50,41 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import axios from 'axios'
-import Map from './components/Map.vue'
+import LocationsMap from './components/Map.vue'
 import Loading from './components/Loading.vue'
-import WebSocket from './components/mixins/WebSocket.js'
+import { useExhibitionSocket } from './composables/useExhibitionSocket'
+import type { Locations } from './types'
 
-export default {
-  name: 'client',
-  mixins: [WebSocket],
-  components: {
-    Map,
-    Loading
-  },
-  data () {
-    return {
-      active: true,
-      timeout: undefined,
-      ids: [],
-      locations: undefined,
-      ttl: 20 * 1000
-    }
-  },
-  watch: {
-    active: function () {
-      if (this.timeout) {
-        window.clearTimeout(this.timeout)
-      }
+const active = ref(true)
+const ids = ref<number[]>([])
+const locations = shallowRef<Locations>()
+let timeout: ReturnType<typeof setTimeout> | undefined
 
-      this.timeout = window.setTimeout(() => {
-        this.active = true
-      }, this.ttl)
-    }
-  },
-  methods: {
-    updateImages: function (ids) {
-      this.ids = ids
-      this.wsSend('client', this.ids)
-    }
-  },
-  created: function () {
-    this.$on('ws:message', (message) => {
-      this.active = message.active
-    })
-  },
-  mounted: function () {
-    axios
-      .get('../locations.display.geojson')
-      .then((response) => {
-        this.locations = response.data
-        return this.locations
-      })
+const { send } = useExhibitionSocket({
+  onMessage(message) {
+    if (typeof message.active === 'boolean') active.value = message.active
   }
+})
+
+watch(active, () => {
+  clearTimeout(timeout)
+  timeout = setTimeout(() => { active.value = true }, 20_000)
+})
+
+function updateImages(selectedIds: number[]) {
+  ids.value = selectedIds
+  send('client', selectedIds)
 }
+
+onMounted(async () => {
+  const response = await axios.get<Locations>(`${import.meta.env.BASE_URL}locations.display.geojson`)
+  locations.value = response.data
+})
+
+onBeforeUnmount(() => clearTimeout(timeout))
 </script>
 
 <style>

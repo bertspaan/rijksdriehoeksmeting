@@ -4,16 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
     <title>Foto’s Meetpunten Rijksdriehoeksmeting</title>
-    <link rel="shortcut icon" type="image/png" href="../favicon.png"/>
+    <link rel="shortcut icon" type="image/png" href="%BASE_URL%favicon.png"/>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but Rijksdriehoeksmeting doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <div id="root"></div>
+    <script type="module" src="/src/client.ts"></script>
   </body>
 </html>

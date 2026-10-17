@@ -5,11 +5,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'no-images-found'
-}
-</script>
 
 <style scoped>
 

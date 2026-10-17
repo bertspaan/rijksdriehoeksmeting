@@ -5,7 +5,7 @@
     </template>
     <template v-else-if="locations">
       <div id="split">
-        <Map :locations="locations" v-on:update="updateImages" />
+        <LocationsMap :locations="locations" v-on:update="updateImages" />
         <template v-if="images.length">
           <Images :images="images" v-on:select-image="modalImage"/>
         </template>
@@ -24,60 +24,35 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onMounted, ref, shallowRef } from 'vue'
 import axios from 'axios'
-
-import Map from './components/Map.vue'
+import LocationsMap from './components/Map.vue'
 import Images from './components/Images.vue'
 import Loading from './components/Loading.vue'
 import ModalImage from './components/ModalImage.vue'
 import StandaloneText from './components/StandaloneText.vue'
 import NoImagesFound from './components/NoImagesFound.vue'
+import type { Locations, LocationFeature, Photo } from './types'
 
-export default {
-  name: 'standalone',
-  components: {
-    Map,
-    Images,
-    StandaloneText,
-    NoImagesFound,
-    Loading,
-    ModalImage
-  },
-  props: {
-    getImageUrl: Function
-  },
-  data () {
-    return {
-      showIntro: true,
-      locations: undefined,
-      images: [],
-      modal: undefined
-    }
-  },
-  methods: {
-    updateImages: function (ids, mapMoved) {
-      if (mapMoved) {
-        this.showIntro = false
-      }
-      this.images = ids.map((id) => this.locations.features[id])
-    },
-    modalImage: function (iiifId, dimensions) {
-      this.modal = {
-        iiifId,
-        dimensions
-      }
-    }
-  },
-  mounted: function () {
-    axios
-      .get('locations.display.geojson')
-      .then((response) => {
-        this.locations = response.data
-        return this.locations
-      })
-  }
+const showIntro = ref(true)
+const locations = shallowRef<Locations>()
+const images = ref<LocationFeature[]>([])
+const modal = ref<Photo>()
+
+function updateImages(ids: number[], mapMoved: boolean) {
+  if (mapMoved) showIntro.value = false
+  images.value = ids.map((id) => locations.value!.features[id])
 }
+
+function modalImage(iiifId: string, dimensions: Photo['dimensions']) {
+  modal.value = { iiifId, dimensions }
+}
+
+onMounted(async () => {
+  const response = await axios.get<Locations>(`${import.meta.env.BASE_URL}locations.display.geojson`)
+  locations.value = response.data
+})
 </script>
 
 <style>

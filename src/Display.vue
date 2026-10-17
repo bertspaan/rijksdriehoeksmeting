@@ -9,71 +9,43 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import axios from 'axios'
-
-import WebSocket from './components/mixins/WebSocket.js'
-
 import Images from './components/Images.vue'
 import DisplayText from './components/DisplayText.vue'
+import { useExhibitionSocket } from './composables/useExhibitionSocket'
+import type { Locations, LocationFeature } from './types'
 
-export default {
-  name: 'display',
-  mixins: [WebSocket],
-  components: {
-    Images,
-    DisplayText
-  },
-  props: {
-    getImageUrl: Function
-  },
-  data () {
-    return {
-      locations: undefined,
-      timeout: undefined,
-      images: [],
-      clientData: {},
-      ttl: 20 * 1000
-    }
-  },
-  methods: {
-    update: function (ids) {
-      if (this.timeout) {
-        window.clearTimeout(this.timeout)
-      }
+const locations = shallowRef<Locations>()
+const images = ref<LocationFeature[]>([])
+const timeout = ref<ReturnType<typeof setTimeout>>()
 
-      if (ids) {
-        this.images = ids.map((id) => this.locations.features[id])
+const { send } = useExhibitionSocket({
+  onOpen() { send('display') },
+  onMessage(message) {
+    if (locations.value) update(message.data)
+  }
+})
 
-        this.timeout = window.setTimeout(() => {
-          this.images = []
-
-          window.clearTimeout(this.timeout)
-          this.timeout = undefined
-        }, this.ttl)
-      } else {
-        this.images = []
-      }
-    }
-  },
-  created: function () {
-    this.$on('ws:open', () => {
-      this.wsSend('display')
-    })
-
-    this.$on('ws:message', (message) => {
-      this.update(message.data)
-    })
-  },
-  mounted: function () {
-    axios
-      .get('../../locations.display.geojson')
-      .then((response) => {
-        this.locations = response.data
-        return this.locations
-      })
+function update(ids?: number[] | null) {
+  clearTimeout(timeout.value)
+  timeout.value = undefined
+  images.value = ids?.map((id) => locations.value!.features[id]).filter(Boolean) ?? []
+  if (ids) {
+    timeout.value = setTimeout(() => {
+      images.value = []
+      timeout.value = undefined
+    }, 20_000)
   }
 }
+
+onMounted(async () => {
+  const response = await axios.get<Locations>(`${import.meta.env.BASE_URL}locations.display.geojson`)
+  locations.value = response.data
+})
+
+onBeforeUnmount(() => clearTimeout(timeout.value))
 </script>
 
 <style>

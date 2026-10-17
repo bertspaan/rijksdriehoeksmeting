@@ -1,54 +1,41 @@
 {
-  "name": "Rijksdriehoeksmeting",
+  "name": "rijksdriehoeksmeting",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.6",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "deploy": "npm run build; push-dir --dir=dist --branch=landmeten-tudelft-nl --cleanup"
+    "dev": "vite",
+    "serve": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "check": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "axios": "^0.18.1",
-    "geokdbush": "^1.1.0",
-    "kdbush": "^3.0.0",
-    "lodash": "^4.17.15",
-    "rbush": "^2.0.2",
-    "reconnecting-websocket": "^4.1.10",
-    "vue": "^2.6.10"
+    "axios": "^1.20.0",
+    "geokdbush": "^2.1.0",
+    "kdbush": "^4.1.0",
+    "lodash": "^4.18.1",
+    "maplibre-gl": "^6.14.0",
+    "reconnecting-websocket": "^4.4.0",
+    "vue": "^3.5.44"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-eslint": "^3.7.0",
-    "@vue/cli-service": "^3.7.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.2.2",
-    "push-dir": "^0.4.1",
-    "vue-template-compiler": "^2.6.10"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+    "@eslint/js": "^10.0.1",
+    "@types/geojson": "^7946.0.16",
+    "@types/lodash": "^4.17.26",
+    "@types/node": "^24.19.2",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "eslint": "^10.13.0",
+    "eslint-plugin-vue": "^10.11.1",
+    "globals": "^17.13.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "vite": "^8.3.4",
+    "vue-tsc": "^3.3.13"
+  }
 }

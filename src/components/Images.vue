@@ -17,33 +17,21 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from 'vue'
 import IIIFImage from './IIIFImage.vue'
 import NoImagesFound from './NoImagesFound.vue'
+import type { LocationFeature, Photo } from '../types'
 
-export default {
-  name: 'images',
-  components: {
-    IIIFImage,
-    NoImagesFound
-  },
-  props: {
-    images: Array
-  },
-  computed: {
-    photos: function () {
-      if (this.images.length > 2) {
-        return this.images.map((image) => image.properties.photos[0])
-      } else {
-        return this.images.map((image) => image.properties.photos).flat()
-      }
-    }
-  },
-  methods: {
-    click: function (iiifId, dimensions) {
-      this.$emit('select-image', iiifId, dimensions)
-    }
-  }
+const props = defineProps<{ images: LocationFeature[] }>()
+const emit = defineEmits<{ 'select-image': [iiifId: string, dimensions: Photo['dimensions']] }>()
+
+const photos = computed(() => props.images.length > 2
+  ? props.images.map((image) => image.properties.photos[0])
+  : props.images.flatMap((image) => image.properties.photos))
+
+function click(iiifId: string, dimensions: Photo['dimensions']) {
+  emit('select-image', iiifId, dimensions)
 }
 </script>
 
@@ -73,7 +61,7 @@ export default {
 .list-complete-item {
   transition: width .2s, height .2s, opacity .1s;
 }
-.list-complete-enter, .list-complete-leave-to {
+.list-complete-enter-from, .list-complete-leave-to {
   opacity: 1;
 }
 

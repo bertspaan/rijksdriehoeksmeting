@@ -11,24 +11,13 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import IIIFImage from './IIIFImage.vue'
+import type { Photo } from '../types'
 
-export default {
-  name: 'modal-image',
-  components: {
-    IIIFImage
-  },
-  props: {
-    iiifId: String,
-    dimensions: Array
-  },
-  methods: {
-    close: function () {
-      this.$emit('close')
-    }
-  }
-}
+defineProps<Photo>()
+const emit = defineEmits<{ close: [] }>()
+function close() { emit('close') }
 </script>
 
 <style scoped>
