@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="dutch">
-      <Images :images="images1" v-on:select-image="close"/>
+      <Images class="intro-photos" :images="images1" v-on:select-image="close"/>
       <p>
         Verken via de kaart meer dan 8000 foto's van meetpunten van de Rijksdriehoeksmeting.
       </p>
@@ -22,7 +22,7 @@
     </div>
     <hr class="horizontal-line" />
     <div class="english">
-      <Images :images="images2" v-on:select-image="close"/>
+      <Images class="intro-photos" :images="images2" v-on:select-image="close"/>
       <p>
         Use the map to explore more than 8000 photos of the Dutch National Triangulation Network.
       </p>
@@ -77,6 +77,11 @@ function close() { emit('close') }
 
 p:first-child {
   margin-top: 0;
+}
+
+.intro-photos {
+  height: 220px;
+  max-height: 30vh;
 }
 
 h2 {

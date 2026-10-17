@@ -1,5 +1,5 @@
 <template>
-  <img :srcset="imgSrcset" :sizes="imgSizes" style="cursor: pointer;"
+  <img :srcset="imgSrcset" :sizes="imgSizes" style="cursor: pointer;" loading="lazy" decoding="async"
     v-on:click="click" :src="imgSrc" />
 </template>
 

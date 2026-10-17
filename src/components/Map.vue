@@ -3,6 +3,18 @@
     <div class="map-container">
       <div class="map" ref="mapContainer"/>
     </div>
+    <div class="number-layer" aria-label="Selected measuring points">
+      <svg class="marker-lines" aria-hidden="true">
+        <template v-for="point in numberedPoints" :key="point.number">
+          <line v-if="point.x !== point.pointX || point.y !== point.pointY"
+            :x1="point.pointX" :y1="point.pointY" :x2="point.x" :y2="point.y" class="line-halo" />
+          <line v-if="point.x !== point.pointX || point.y !== point.pointY"
+            :x1="point.pointX" :y1="point.pointY" :x2="point.x" :y2="point.y" class="line" />
+        </template>
+      </svg>
+      <PointNumber v-for="point in numberedPoints" :key="point.number" class="map-number"
+        :number="point.number" :style="{ left: `${point.x}px`, top: `${point.y}px` }" />
+    </div>
     <div class="rectangle-container" :style="{
         padding: `${rectanglePadding}px`
       }">
@@ -12,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
+import { onBeforeUnmount, onMounted, shallowRef, useTemplateRef } from 'vue'
 import throttle from 'lodash/throttle.js'
 import KDBush from 'kdbush'
 import { around } from 'geokdbush'
@@ -20,6 +32,7 @@ import { Map as MapLibreMap, setWorkerUrl } from 'maplibre-gl'
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Locations } from '../types'
+import PointNumber from './PointNumber.vue'
 
 setWorkerUrl(workerUrl)
 
@@ -30,6 +43,43 @@ const rectanglePadding = 30
 let map: MapLibreMap | undefined
 let index: KDBush | undefined
 let highlightedIds: number[] = []
+interface NumberedPoint {
+  number: number
+  pointX: number
+  pointY: number
+  x: number
+  y: number
+}
+const numberedPoints = shallowRef<NumberedPoint[]>([])
+
+function updateNumberedPoints() {
+  if (!map || !container.value) return
+  const { width, height } = container.value.getBoundingClientRect()
+  const points: NumberedPoint[] = []
+  for (const [index, id] of highlightedIds.entries()) {
+    const coordinates = props.locations.features[id].geometry.coordinates
+    const anchor = map.project([coordinates[0], coordinates[1]])
+    if (anchor.x < 0 || anchor.x > width || anchor.y < 0 || anchor.y > height) continue
+    let x = anchor.x
+    let y = anchor.y
+    // Keep nearby and coincident numbers legible, with a line to the true point.
+    search: for (let ring = 0; ring <= 8; ring++) {
+      const steps = ring === 0 ? 1 : 16
+      for (let step = 0; step < steps; step++) {
+        const angle = step * Math.PI * 2 / steps
+        const candidateX = Math.min(width - 15, Math.max(15, anchor.x + Math.cos(angle) * ring * 28))
+        const candidateY = Math.min(height - 15, Math.max(15, anchor.y + Math.sin(angle) * ring * 28))
+        if (points.every((point) => Math.hypot(point.x - candidateX, point.y - candidateY) >= 28)) {
+          x = candidateX
+          y = candidateY
+          break search
+        }
+      }
+    }
+    points.push({ number: index + 1, pointX: anchor.x, pointY: anchor.y, x, y })
+  }
+  numberedPoints.value = points
+}
 
 function sendData(mapMoved = true) {
   if (!map?.getSource('points') || !index || !container.value) return
@@ -50,6 +100,7 @@ function sendData(mapMoved = true) {
   for (const id of highlightedIds) {
     map.setFeatureState({ id, source: 'points' }, { highlight: true })
   }
+  updateNumberedPoints()
   emit('update', highlightedIds, mapMoved)
 }
 
@@ -84,14 +135,24 @@ onMounted(() => {
       type: 'circle',
       source: 'points',
       paint: {
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 4, 16, 10],
-        'circle-opacity': ['case', ['boolean', ['feature-state', 'highlight'], false], 1, 0.4],
-        'circle-color': ['case', ['boolean', ['feature-state', 'highlight'], false], '#ed1c24', '#ede321']
+        'circle-radius': ['interpolate', ['linear'], ['zoom'],
+          8, ['case', ['boolean', ['feature-state', 'highlight'], false], 6, 4],
+          16, ['case', ['boolean', ['feature-state', 'highlight'], false], 6, 7]],
+        'circle-color': ['case', ['boolean', ['feature-state', 'highlight'], false], '#b5232d', '#087f8c'],
+        'circle-stroke-color': '#fff',
+        'circle-stroke-width': 1.5
       }
     })
     sendData(false)
   })
-  instance.on('move', () => throttledSendData())
+  instance.on('move', () => {
+    updateNumberedPoints()
+    throttledSendData()
+  })
+  instance.on('resize', () => {
+    updateNumberedPoints()
+    throttledSendData()
+  })
 })
 
 onBeforeUnmount(() => {
@@ -124,6 +185,30 @@ onBeforeUnmount(() => {
 
 .map :deep(.maplibregl-ctrl-attrib a) {
   color: inherit;
+}
+
+.number-layer, .marker-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.map-number {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.line-halo {
+  stroke: white;
+  stroke-width: 4px;
+}
+
+.line {
+  stroke: #b5232d;
+  stroke-width: 1.5px;
 }
 
 .rectangle-container {

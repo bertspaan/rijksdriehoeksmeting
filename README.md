@@ -20,6 +20,7 @@ Open http://localhost:5173/rijksdriehoeksmeting/. The exhibition controller and 
 ```sh
 pnpm lint
 pnpm check
+pnpm test
 pnpm build
 pnpm preview
 ```
@@ -28,7 +29,7 @@ pnpm preview
 
 ## Deployment
 
-[Deploy website](.github/workflows/deploy.yml) checks, builds, and deploys GitHub Pages on every push to `main`. Pull requests run lint, TypeScript checks, and a production build. A deployment can also be started manually from the Actions tab.
+[Deploy website](.github/workflows/deploy.yml) checks, builds, and deploys GitHub Pages on every push to `main`. Pull requests run lint, TypeScript checks, layout tests, and a production build. A deployment can also be started manually from the Actions tab.
 
 GitHub Pages must use **GitHub Actions** as its source in the repository’s Pages settings. The workflow uploads `dist` directly; no deployment branch is needed.
 

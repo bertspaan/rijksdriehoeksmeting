@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <template v-if="images.length || timeout">
-      <Images :images="images" />
+      <Images :images="images" numbered />
     </template>
      <template v-else>
        <DisplayText :locations="locations" />

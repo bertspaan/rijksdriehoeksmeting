@@ -7,7 +7,7 @@
       <div id="split">
         <LocationsMap :locations="locations" v-on:update="updateImages" />
         <template v-if="images.length">
-          <Images :images="images" v-on:select-image="modalImage"/>
+          <Images :images="images" numbered v-on:select-image="modalImage"/>
         </template>
         <template v-else>
           <NoImagesFound />
