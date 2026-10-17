@@ -14,7 +14,7 @@
         </template>
       </div>
       <template v-if="modal">
-        <ModalImage :iiifId="modal.iiifId" :dimensions="modal.dimensions"
+        <ModalImage :photos="modal.location.properties.photos" :pointNumber="modal.number"
           v-on:close="modal=undefined" />
       </template>
     </template>
@@ -33,20 +33,20 @@ import Loading from './components/Loading.vue'
 import ModalImage from './components/ModalImage.vue'
 import StandaloneText from './components/StandaloneText.vue'
 import NoImagesFound from './components/NoImagesFound.vue'
-import type { Locations, LocationFeature, Photo } from './types'
+import type { Locations, LocationFeature } from './types'
 
 const showIntro = ref(true)
 const locations = shallowRef<Locations>()
 const images = ref<LocationFeature[]>([])
-const modal = ref<Photo>()
+const modal = shallowRef<{ location: LocationFeature; number: number }>()
 
 function updateImages(ids: number[], mapMoved: boolean) {
   if (mapMoved) showIntro.value = false
   images.value = ids.map((id) => locations.value!.features[id])
 }
 
-function modalImage(iiifId: string, dimensions: Photo['dimensions']) {
-  modal.value = { iiifId, dimensions }
+function modalImage(location: LocationFeature, number: number) {
+  modal.value = { location, number }
 }
 
 onMounted(async () => {
