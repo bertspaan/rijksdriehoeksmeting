@@ -32,7 +32,7 @@ const height = ref(0)
 const gap = 8
 let observer: ResizeObserver | undefined
 
-const photos = computed(() => props.images.flatMap((image, index) => image.properties.photos.map((photo) => ({
+const photos = computed(() => props.images.flatMap((image, index) => image.properties.photos.slice(0, 1).map((photo) => ({
   ...photo,
   key: `${image.id}:${photo.iiifId}`,
   number: index + 1
